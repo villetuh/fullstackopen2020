@@ -1,0 +1,21 @@
+title New note in SPA
+
+note over browser:
+form's onsubmit event handler is
+executed and default event handling
+is aborted
+end note
+
+note over browser:
+new note is added to notes list,
+form text field is reset and
+notes list is redrawn
+end note
+
+note over browser:
+new note is sent to server as json
+data using HTTP POST
+end note
+
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+server->browser: HTTP 201 Created
