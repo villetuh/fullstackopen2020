@@ -15,6 +15,10 @@ const Feedback = ({clickCounts, eventHandlers}) => {
 };
 
 const Statistics = ({clickCounts}) => {
+  const totalClicks = clickCounts.good + clickCounts.neutral + clickCounts.bad;
+  const averageClickValue = (clickCounts.good - clickCounts.bad) / totalClicks;
+  const percentageOfPositive = clickCounts.good / totalClicks * 100.0;
+
   return (
     <div>
       <h2>Statistics</h2>
@@ -22,6 +26,9 @@ const Statistics = ({clickCounts}) => {
         <Statistic label="Good" value={clickCounts.good} />
         <Statistic label="Neutral" value={clickCounts.neutral} />
         <Statistic label="Bad" value={clickCounts.bad} />
+        <Statistic label="All" value={totalClicks} />
+        <Statistic label="Average" value={isNaN(averageClickValue) ? "-" : Math.round(averageClickValue * 1000) / 1000} />
+        <Statistic label="Positive %" value={isNaN(percentageOfPositive) ? "-" : Math.round(percentageOfPositive * 10) / 10} />
       </div>
     </div>
   );
