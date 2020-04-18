@@ -15,6 +15,7 @@ const Display = ({text}) => (
 
 const App = (props) => {
   const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0));
 
   const selectRandomAnectode = () => {
     let newAnecdote;
@@ -26,9 +27,18 @@ const App = (props) => {
     setSelected(newAnecdote);
   };
 
+  const voteAnectode = () => {
+    const newVotes = [...votes];
+    newVotes[selected] += 1;
+
+    setVotes(newVotes);
+  };
+
   return (
     <div>
       <Display text={props.anecdotes[selected]} />
+      <Display text={"has " + votes[selected] + " votes."} />
+      <Button handleClick={voteAnectode} text="Vote" />
       <Button handleClick={selectRandomAnectode} text="Next" />
     </div>
   );
