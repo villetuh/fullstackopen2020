@@ -25,14 +25,28 @@ const Statistics = ({clickCounts}) => {
   }
   else {
     statistics = (
-      <div>
-        <Statistic label="Good" value={clickCounts.good} />
-        <Statistic label="Neutral" value={clickCounts.neutral} />
-        <Statistic label="Bad" value={clickCounts.bad} />
-        <Statistic label="All" value={totalClicks} />
-        <Statistic label="Average" value={isNaN(averageClickValue) ? "-" : Math.round(averageClickValue * 1000) / 1000} />
-        <Statistic label="Positive %" value={isNaN(percentageOfPositive) ? "-" : Math.round(percentageOfPositive * 10) / 10} />
-      </div>
+      <table>
+        <tbody>
+          <tr>
+            <Statistic label="Good" value={clickCounts.good} />
+          </tr>
+          <tr>
+            <Statistic label="Neutral" value={clickCounts.neutral} />
+          </tr>
+          <tr>
+            <Statistic label="Bad" value={clickCounts.bad} />
+          </tr>
+          <tr>
+            <Statistic label="All" value={totalClicks} />
+          </tr>
+          <tr>
+            <Statistic label="Average" value={isNaN(averageClickValue) ? "-" : Math.round(averageClickValue * 1000) / 1000} />
+          </tr>
+          <tr>
+            <Statistic label="Positive %" value={isNaN(percentageOfPositive) ? "-" : Math.round(percentageOfPositive * 10) / 10} />
+          </tr>
+        </tbody>
+      </table>
     );
   }
 
@@ -45,7 +59,9 @@ const Statistics = ({clickCounts}) => {
 };
 
 const Statistic = ({label, value}) => (
-  <div>{label}: {value}</div>
+  <>
+    <td>{label}:</td><td>{value}</td>
+  </>
   );
 
 const Button = (props) => (
