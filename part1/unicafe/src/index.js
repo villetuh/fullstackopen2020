@@ -19,9 +19,12 @@ const Statistics = ({clickCounts}) => {
   const averageClickValue = (clickCounts.good - clickCounts.bad) / totalClicks;
   const percentageOfPositive = clickCounts.good / totalClicks * 100.0;
 
-  return (
-    <div>
-      <h2>Statistics</h2>
+  let statistics;
+  if (totalClicks === 0) {
+    statistics = <div>No feedback given.</div>;
+  }
+  else {
+    statistics = (
       <div>
         <Statistic label="Good" value={clickCounts.good} />
         <Statistic label="Neutral" value={clickCounts.neutral} />
@@ -30,6 +33,13 @@ const Statistics = ({clickCounts}) => {
         <Statistic label="Average" value={isNaN(averageClickValue) ? "-" : Math.round(averageClickValue * 1000) / 1000} />
         <Statistic label="Positive %" value={isNaN(percentageOfPositive) ? "-" : Math.round(percentageOfPositive * 10) / 10} />
       </div>
+    );
+  }
+
+  return (
+    <div>
+      <h2>Statistics</h2>
+      {statistics}
     </div>
   );
 };
