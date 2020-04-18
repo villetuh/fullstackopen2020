@@ -34,12 +34,22 @@ const App = (props) => {
     setVotes(newVotes);
   };
 
+  const anecdoteWithMostVotes = votes.reduce(
+            (maxIndex, currentIndexValue, currentIndex, votes) => 
+              currentIndexValue > votes[maxIndex] ? currentIndex : maxIndex,
+            0);
+
   return (
     <div>
+      <h2>Current anecdote</h2>
       <Display text={props.anecdotes[selected]} />
       <Display text={"has " + votes[selected] + " votes."} />
       <Button handleClick={voteAnectode} text="Vote" />
       <Button handleClick={selectRandomAnectode} text="Next" />
+
+      <h2>Anecdote with most votes</h2>
+      <Display text={props.anecdotes[anecdoteWithMostVotes]} />
+      <Display text={"has " + votes[anecdoteWithMostVotes] + " votes."} />
     </div>
   );
 };
