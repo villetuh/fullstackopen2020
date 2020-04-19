@@ -36,9 +36,9 @@ const Part = ({part}) => {
 };
 
 const Total = ({parts}) => {
-  let numberOfExercises = parts.map(part => part.exercises).reduce((a, b) => a + b, 0);
+  let numberOfExercises = parts.reduce((sum, part) => sum + part.exercises, 0);
   return (
-  <p>Number of exercises {numberOfExercises}</p>
+  <p><strong>Total number of exercises: {numberOfExercises}</strong></p>
   )
 };
 
