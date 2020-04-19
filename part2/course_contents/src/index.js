@@ -43,18 +43,29 @@ const Total = ({parts}) => {
 };
 
 const App = () => {
-  const course = {
-    name: 'Half Stack application development',
-    parts: [
-      { id: 1, name: 'Fundamentals of React', exercises: 10 },
-      { id: 2, name: 'Using props to pass data', exercises: 7 },
-      { id: 3, name: 'State of a component', exercises: 14 }
-    ]
-  };
+  const courses = [
+    {
+      name: 'Half Stack application development',
+      id: 1,
+      parts: [
+        { name: 'Fundamentals of React', id: 1, exercises: 10 },
+        { name: 'Using props to pass data', id: 2, exercises: 7 },
+        { name: 'State of a component', id: 3, exercises: 14 }
+      ]
+    },
+    {
+      name: 'Node.js',
+      id: 2,
+      parts: [
+        { name: 'Routing', id: 1, exercises: 3 },
+        { name: 'Middlewares', id: 2, exercises: 7 }
+      ]
+    }
+  ];
   
   return (
     <div>
-      <Course course={course} />
+      {courses.map(course => <Course course={course} key={course.id} />)}
     </div>
   );
 };
