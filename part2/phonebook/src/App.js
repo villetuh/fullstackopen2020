@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import AddPerson from './components/AddPerson';
-import Person from './components/Person'; 
+import Persons from './components/Persons'; 
 import FilterField from './components/FilterField';
 
 const App = () => {
@@ -43,10 +43,7 @@ const App = () => {
       <AddPerson onPersonAdded={handleAddNewPerson} />
       
       <h2>Numbers</h2>
-      { 
-        persons.filter(person => person.name.toUpperCase().includes(filter.toUpperCase()))
-              .map(person => <Person person={person} key={person.id} />) 
-      }
+      <Persons persons={persons} filter={filter} />
     </div>
   );
 };
