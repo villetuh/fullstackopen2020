@@ -1,17 +1,14 @@
 import React, {useState} from 'react';
 
 const AddPerson = ({onPersonAdded}) => {
-  const [ id, setId ] = useState(1);
+  
   const [ newName, setNewName ] = useState('');
   const [ newNumber, setNewNumber ] = useState('');
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
 
-    const newId = id + 1;
-    setId(newId);
-
-    onPersonAdded({ name: newName, id: newId, number: newNumber });
+    onPersonAdded({ name: newName, number: newNumber });
     setNewName('');
     setNewNumber('');
   };
