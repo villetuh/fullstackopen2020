@@ -6,7 +6,7 @@ import Person from './components/Person';
 const App = () => {
   
   const [ persons, setPersons ] = useState([
-    { name: 'Arto Hellas', id: 1 }
+    { name: 'Arto Hellas', id: 1, number: '0401234567' }
   ]);
 
   const handleAddNewPerson = (person) => {
