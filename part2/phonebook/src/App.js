@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import AddPerson from './components/AddPerson';
 import Person from './components/Person'; 
+import FilterField from './components/FilterField';
 
 const App = () => {
   const [ id, setId ] = useState(4);
@@ -12,6 +13,12 @@ const App = () => {
     { name: 'Dan Abramov', id: 3, number: '12-43-234345' },
     { name: 'Mary Poppendieck', id: 4, number: '39-23-6423122' }
   ]);
+
+  const [filter, setFilter] = useState('');
+
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value);
+  };
 
   const handleAddNewPerson = (person) => {
     const personsWithSameName = persons.filter((p) => p.name === person.name);
@@ -29,12 +36,17 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
-        <AddPerson onPersonAdded={handleAddNewPerson} />
+      <h2>Phone book</h2>
+      <FilterField filter={filter} handleFilterChange={handleFilterChange} />
+
+      <h2>Add new Person</h2>
+      <AddPerson onPersonAdded={handleAddNewPerson} />
+      
       <h2>Numbers</h2>
-        <div>
-          { persons.map(person => <Person person={person} key={person.id} />) }
-        </div>
+      { 
+        persons.filter(person => person.name.toUpperCase().includes(filter.toUpperCase()))
+              .map(person => <Person person={person} key={person.id} />) 
+      }
     </div>
   );
 };
