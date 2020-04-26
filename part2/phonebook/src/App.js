@@ -10,6 +10,12 @@ const App = () => {
   ]);
 
   const handleAddNewPerson = (person) => {
+    const personsWithSameName = persons.filter((p) => p.name === person.name);
+    if (personsWithSameName.length > 0) {
+      window.alert(`${person.name} already exists in the phone book.`);
+      return;
+    }
+
     setPersons(persons.concat(person));
   };
 
