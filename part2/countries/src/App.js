@@ -22,6 +22,10 @@ function App() {
     setFilter(event.target.value);
   };
 
+  const selectCountry = (country) => {
+    setFilter(country.name);
+  }
+
   const filteredCountries = getCountriesBasedOnFilter(countries, filter);
 
   let infoMessage;
@@ -36,7 +40,7 @@ function App() {
     countryDisplay = <CountryInfo country={filteredCountries[0]} />;
   }
   else {
-    countryDisplay = <CountryList countries={filteredCountries} />;
+    countryDisplay = <CountryList countries={filteredCountries} selectCountry={selectCountry} />;
   }
 
   return (

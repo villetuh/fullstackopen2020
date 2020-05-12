@@ -1,9 +1,12 @@
 import React from 'react';
 
-const CountryListItem = ({ country }) => {
+const CountryListItem = ({ country, selectCountry }) => {
   return (
     <>
-      <div>{country.name}</div>
+      <div>
+        {country.name}
+        <button onClick={() => selectCountry(country)}>Select</button>
+      </div>
     </>
   );
 };
