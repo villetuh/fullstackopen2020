@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import axios from 'axios';
 
+import CountryInfo from './components/CountryInfo';
 import CountryList from './components/CountryList';
 import FilterField from './components/FilterField';
 
@@ -30,6 +31,9 @@ function App() {
   }
   else if (filteredCountries.length > 10) {
     infoMessage = 'Too many matches. Use more specific filter.';
+  }
+  else if (filteredCountries.length === 1) {
+    countryDisplay = <CountryInfo country={filteredCountries[0]} />;
   }
   else {
     countryDisplay = <CountryList countries={filteredCountries} />;
