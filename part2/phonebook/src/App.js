@@ -1,20 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+import axios from 'axios';
 
 import AddPerson from './components/AddPerson';
 import Persons from './components/Persons'; 
 import FilterField from './components/FilterField';
 
 const App = () => {
-  const [ id, setId ] = useState(4);
+  const [ id, setId ] = useState(0);
+  const [ persons, setPersons ] = useState([]);
+  const [ filter, setFilter ] = useState('');
 
-  const [ persons, setPersons ] = useState([
-    { name: 'Arto Hellas', id: 1, number: '040-123456' },
-    { name: 'Ada Lovelace', id: 2, number: '39-44-5323523' },
-    { name: 'Dan Abramov', id: 3, number: '12-43-234345' },
-    { name: 'Mary Poppendieck', id: 4, number: '39-23-6423122' }
-  ]);
-
-  const [filter, setFilter] = useState('');
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        let largestId = response.data.reduce((maxId, currentItem) => maxId < currentItem.id ? currentItem.id : maxId, 0);
+        
+        setId(largestId);
+        setPersons(response.data);
+      })
+  }, []);
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
