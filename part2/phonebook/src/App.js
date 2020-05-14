@@ -35,6 +35,21 @@ const App = () => {
       });
   };
 
+  const handleDeletePerson = (person) => {
+
+    // Confirm from user that delete was on purpose
+    const message = `Delete ${person.name}?`;
+    if (!window.confirm(message)) {
+      return;
+    }
+
+    personService
+      .remove(person)
+      .then(() => {
+        setPersons(persons.filter(p => p.id !== person.id));
+      });
+  };
+
   return (
     <div>
       <h2>Phone book</h2>
@@ -44,7 +59,7 @@ const App = () => {
       <AddPerson onPersonAdded={handleAddNewPerson} />
       
       <h2>Numbers</h2>
-      <Persons persons={persons} filter={filter} />
+      <Persons persons={persons} filter={filter} onDelete={handleDeletePerson} />
     </div>
   );
 };
