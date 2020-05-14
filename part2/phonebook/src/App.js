@@ -7,7 +7,6 @@ import Persons from './components/Persons';
 import FilterField from './components/FilterField';
 
 const App = () => {
-  const [ id, setId ] = useState(0);
   const [ persons, setPersons ] = useState([]);
   const [ filter, setFilter ] = useState('');
 
@@ -15,9 +14,6 @@ const App = () => {
     axios
       .get('http://localhost:3001/persons')
       .then(response => {
-        let largestId = response.data.reduce((maxId, currentItem) => maxId < currentItem.id ? currentItem.id : maxId, 0);
-        
-        setId(largestId);
         setPersons(response.data);
       })
   }, []);
@@ -32,10 +28,6 @@ const App = () => {
       window.alert(`${person.name} already exists in the phone book.`);
       return;
     }
-
-    const newId = id + 1;
-    person.id = newId;
-    setId(newId);
 
     setPersons(persons.concat(person));
   };
