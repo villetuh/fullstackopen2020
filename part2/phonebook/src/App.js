@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
 
-import axios from 'axios';
-
 import AddPerson from './components/AddPerson';
 import Persons from './components/Persons'; 
 import FilterField from './components/FilterField';
+
+import personService from './services/persons';
 
 const App = () => {
   const [ persons, setPersons ] = useState([]);
   const [ filter, setFilter ] = useState('');
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data);
+    personService.getAll()
+      .then(persons => {
+        setPersons(persons);
       })
   }, []);
 
@@ -29,10 +28,10 @@ const App = () => {
       return;
     }
 
-    axios
-      .post('http://localhost:3001/persons', person)
-      .then(response => {
-        setPersons(persons.concat(response.data));
+    personService
+      .create(person)
+      .then(person => {
+        setPersons(persons.concat(person));
       });
   };
 
