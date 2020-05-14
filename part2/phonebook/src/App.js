@@ -23,16 +23,30 @@ const App = () => {
 
   const handleAddNewPerson = (person) => {
     const personsWithSameName = persons.filter((p) => p.name === person.name);
+    let replaceExistingNumber = false;
+    
     if (personsWithSameName.length > 0) {
-      window.alert(`${person.name} already exists in the phone book.`);
-      return;
+      if (!window.confirm(`${person.name} already exists in the phone book. Replace existing number with new one?`)) {
+        return;
+      }
+      person = { ...person, id: personsWithSameName[0].id };
+      replaceExistingNumber = true;
     }
 
-    personService
-      .create(person)
-      .then(person => {
-        setPersons(persons.concat(person));
-      });
+    if (replaceExistingNumber) {
+      personService
+        .update(person)
+        .then(updatedPerson => {
+          setPersons(persons.map(person => person.id === updatedPerson.id ? updatedPerson : person));
+        })
+    }
+    else {
+      personService
+        .create(person)
+        .then(person => {
+          setPersons(persons.concat(person));
+        });
+    }
   };
 
   const handleDeletePerson = (person) => {
