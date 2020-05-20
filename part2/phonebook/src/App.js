@@ -3,12 +3,14 @@ import React, { useState, useEffect } from 'react';
 import AddPerson from './components/AddPerson';
 import Persons from './components/Persons'; 
 import FilterField from './components/FilterField';
+import Notification from './components/Notification';
 
 import personService from './services/persons';
 
 const App = () => {
   const [ persons, setPersons ] = useState([]);
   const [ filter, setFilter ] = useState('');
+  const [ notificationText, setNotificationText ] = useState('');
 
   useEffect(() => {
     personService.getAll()
@@ -38,14 +40,18 @@ const App = () => {
         .update(person)
         .then(updatedPerson => {
           setPersons(persons.map(person => person.id === updatedPerson.id ? updatedPerson : person));
+          return updatedPerson;
         })
+        .then(updatedPerson => showTimedNotification(`Number updated for ${updatedPerson.name}.`));
     }
     else {
       personService
         .create(person)
         .then(person => {
           setPersons(persons.concat(person));
-        });
+          return person;
+        })
+        .then(person => showTimedNotification(`${person.name} added to phonebook.`));
     }
   };
 
@@ -64,9 +70,17 @@ const App = () => {
       });
   };
 
+  const showTimedNotification = (text, time = 5000) => {
+    setNotificationText(text);
+    setTimeout(() => {
+      setNotificationText(null);
+    }, time);
+  };
+
   return (
     <div>
       <h2>Phone book</h2>
+      <Notification text={notificationText} />
       <FilterField filter={filter} handleFilterChange={handleFilterChange} />
 
       <h2>Add new Person</h2>

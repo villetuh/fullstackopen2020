@@ -1,0 +1,11 @@
+.Notification {
+    border-style: solid;
+    border-width: medium;
+    border-color: green;
+
+    padding: 5px;
+
+    color: green;
+    background-color: lightgray;
+    font-size: 120%;
+}
