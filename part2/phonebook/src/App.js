@@ -10,7 +10,7 @@ import personService from './services/persons';
 const App = () => {
   const [ persons, setPersons ] = useState([]);
   const [ filter, setFilter ] = useState('');
-  const [ notificationText, setNotificationText ] = useState('');
+  const [ notification, setNotification ] = useState({ type: '', text: '' });
 
   useEffect(() => {
     personService.getAll()
@@ -40,18 +40,25 @@ const App = () => {
         .update(person)
         .then(updatedPerson => {
           setPersons(persons.map(person => person.id === updatedPerson.id ? updatedPerson : person));
-          return updatedPerson;
+          showTimedNotification('info', `Number updated for ${updatedPerson.name}.`)
         })
-        .then(updatedPerson => showTimedNotification(`Number updated for ${updatedPerson.name}.`));
+        .catch(error => {
+          if (error.response !== undefined && error.response.status === 404) {
+            showTimedNotification('error', `${person.name} was no longer found from phone book.`);
+          }
+          else {
+            showTimedNotification('error', `Error occurred while upating number for ${person.name}.`);
+          }
+        });
     }
     else {
       personService
         .create(person)
         .then(person => {
           setPersons(persons.concat(person));
-          return person;
+          showTimedNotification('info', `${person.name} added to phone book.`)
         })
-        .then(person => showTimedNotification(`${person.name} added to phonebook.`));
+        .catch(error => showTimedNotification('error', `Error occurred while adding ${person.name} to phone book.`));
     }
   };
 
@@ -67,20 +74,29 @@ const App = () => {
       .remove(person)
       .then(() => {
         setPersons(persons.filter(p => p.id !== person.id));
+        showTimedNotification('info', `${person.name} removed from phone book.`);
+      })
+      .catch(error => {
+        if (error.response !== undefined && error.response.status === 404) {
+          showTimedNotification('error', `${person.name} was no longer found from phone book.`);
+        }
+        else {
+          showTimedNotification('error', `Error occurred while deleting ${person.name}.`);
+        }
       });
   };
 
-  const showTimedNotification = (text, time = 5000) => {
-    setNotificationText(text);
+  const showTimedNotification = (type, text, time = 5000) => {
+    setNotification({ type, text });
     setTimeout(() => {
-      setNotificationText(null);
+      setNotification(null);
     }, time);
   };
 
   return (
     <div>
       <h2>Phone book</h2>
-      <Notification text={notificationText} />
+      <Notification notification={notification} />
       <FilterField filter={filter} handleFilterChange={handleFilterChange} />
 
       <h2>Add new Person</h2>
