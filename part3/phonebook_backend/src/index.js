@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 
+app.use(express.json());
+
 let persons = [
   { name: 'Arto Hellas', id: 1, number: '040-123456' },
   { name: 'Ada Lovelace', id: 2, number: '39-44-5323523' },
@@ -14,6 +16,36 @@ app.get('/info', (requests, response) => {
 
 app.get('/api/persons', (request, response) => {
   response.json(persons);
+});
+
+app.post('/api/persons', (request, response) => {
+  const newPerson = request.body;
+
+  if (newPerson.name === undefined || newPerson.name === '') {
+    response.status(422).json('{ "error": "Entry must contain name of the person." }').end();
+    return;
+  }
+  else if (newPerson.number === undefined || newPerson.number === '') {
+    response.status(422).json('{ "error": "Entry must contain number for the person." }').end();
+    return;
+  }
+
+  if (persons.some(person => person.name === newPerson.name)) {
+    response.status(422).json('{ "error": "Person with same name already found." }').end();
+    return;
+  }
+
+  let newId;
+  do {
+    newId = Math.floor(Math.random() * Math.floor(1000));
+  } 
+  while (persons.some(person => person.id === newId));
+
+  newPerson.id = newId;
+
+  persons.push(newPerson);
+
+  response.status(201).json(newPerson);
 });
 
 app.get('/api/persons/:id', (request, response) => {
