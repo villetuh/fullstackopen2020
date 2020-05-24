@@ -3,7 +3,15 @@ const morgan = require('morgan');
 
 const app = express();
 
-app.use(morgan('tiny'));
+morgan.token('post-data', request => {
+  if (request.method !== 'POST') {
+    return null;
+  }
+
+  return JSON.stringify(request.body);
+});
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :post-data'));
 app.use(express.json());
 
 let persons = [
@@ -44,11 +52,11 @@ app.post('/api/persons', (request, response) => {
   } 
   while (persons.some(person => person.id === newId));
 
-  newPerson.id = newId;
+  const personToAdd = { ...newPerson, id: newId};
+  
+  persons.push(personToAdd);
 
-  persons.push(newPerson);
-
-  response.status(201).json(newPerson);
+  response.status(201).json(personToAdd);
 });
 
 app.get('/api/persons/:id', (request, response) => {
