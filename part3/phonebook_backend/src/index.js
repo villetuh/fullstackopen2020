@@ -8,6 +8,10 @@ let persons = [
   { name: 'Mary Poppendieck', id: 4, number: '39-23-6423122' }
 ];
 
+app.get('/info', (requests, response) => {
+  response.send(`Phone book contains ${persons.length} entries.<br />${new Date(Date.now())}`);
+});
+
 app.get('/api/persons', (request, response) => {
   response.json(persons);
 });
