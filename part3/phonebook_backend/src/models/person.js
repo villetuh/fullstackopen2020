@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+mongoose.set('useFindAndModify', false);
 
 const connectionString = process.env.DB_CONNECTION_STRING;
 

@@ -61,6 +61,23 @@ app.post('/api/persons', (request, response) => {
   });
 });
 
+app.put('/api/persons/:id', (request, response, next) => {
+  const person = {
+    name: request.body.name,
+    number: request.body.number
+  };
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatedPerson => {
+      if (person) {
+        response.json(updatedPerson);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch(error => next(error));
+});
+
 app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id).then(person => {
     if (person) {
