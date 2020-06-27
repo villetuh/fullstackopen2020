@@ -32,7 +32,7 @@ app.get('/api/persons', (request, response) => {
   });
 });
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const newPerson = request.body;
 
   if (newPerson.name === undefined || newPerson.name === '') {
@@ -44,21 +44,15 @@ app.post('/api/persons', (request, response) => {
     return;
   }
 
-  Person.find({ name: newPerson.name }).then((matchedPersons) => {
-    if (matchedPersons.length > 0) {
-      response.status(422).json('{ "error": "Person with same name already found." }').end();
-      return;
-    }
-
-    const person = new Person({
-      name: newPerson.name,
-      number: newPerson.number
-    });
-
-    person.save().then(newEntry => {
-      response.status(201).json(newEntry);
-    });
+  const person = new Person({
+    name: newPerson.name,
+    number: newPerson.number
   });
+
+  person.save().then(newEntry => {
+    response.status(201).json(newEntry);
+  })
+  .catch(error => next(error));
 });
 
 app.put('/api/persons/:id', (request, response, next) => {
@@ -101,6 +95,8 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'Unsupported id format.'});
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message });
   }
 
   next(error);
