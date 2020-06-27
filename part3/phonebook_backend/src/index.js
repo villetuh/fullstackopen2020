@@ -49,10 +49,11 @@ app.post('/api/persons', (request, response, next) => {
     number: newPerson.number
   });
 
-  person.save().then(newEntry => {
-    response.status(201).json(newEntry);
-  })
-  .catch(error => next(error));
+  person.save()
+    .then(newEntry => {
+      response.status(201).json(newEntry);
+    })
+    .catch(error => next(error));
 });
 
 app.put('/api/persons/:id', (request, response, next) => {
@@ -73,28 +74,30 @@ app.put('/api/persons/:id', (request, response, next) => {
 });
 
 app.get('/api/persons/:id', (request, response, next) => {
-  Person.findById(request.params.id).then(person => {
-    if (person) {
-      response.json(person);
-    } else {
-      response.status(404).end();
-    }
-  })
-  .catch(error => next(error));
+  Person.findById(request.params.id)
+    .then(person => {
+      if (person) {
+        response.json(person);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch(error => next(error));
 });
 
 app.delete('/api/persons/:id', (request, response, next) => {
-  Person.findByIdAndDelete(request.params.id).then(person => {
-    response.status(204).end();
-  })
-  .catch(error => next(error));
+  Person.findByIdAndDelete(request.params.id)
+    .then(() => {
+      response.status(204).end();
+    })
+    .catch(error => next(error));
 });
 
 const errorHandler = (error, request, response, next) => {
   console.log(error.message);
 
   if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'Unsupported id format.'});
+    return response.status(400).send({ error: 'Unsupported id format.' });
   } else if (error.name === 'ValidationError') {
     return response.status(400).send({ error: error.message });
   }

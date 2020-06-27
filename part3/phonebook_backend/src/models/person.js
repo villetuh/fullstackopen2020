@@ -7,19 +7,19 @@ mongoose.set('useCreateIndex', true);
 const connectionString = process.env.DB_CONNECTION_STRING;
 
 mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(result => {
+  .then(() => {
     console.log('Connection to database created successfully.');
   })
-  .catch(error => {
+  .catch(() => {
     console.log('Error occurred while connection to database.');
   });
 
 const personSchema = new mongoose.Schema({
-  name: { 
-    type: String, 
-    required: true, 
+  name: {
+    type: String,
+    required: true,
     unique: true,
-    minlength: 3 
+    minlength: 3
   },
   number: {
     type: String,
