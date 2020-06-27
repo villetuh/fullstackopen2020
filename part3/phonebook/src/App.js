@@ -45,8 +45,9 @@ const App = () => {
         .catch(error => {
           if (error.response !== undefined && error.response.status === 404) {
             showTimedNotification('error', `${person.name} was no longer found from phone book.`);
-          }
-          else {
+          } else if (error.response !== undefined && error.response.status === 400) {
+            showTimedNotification('error', `Error occurred while upating number for ${person.name}. ${error.response.data.error}`);
+          } else {
             showTimedNotification('error', `Error occurred while upating number for ${person.name}.`);
           }
         });
@@ -58,7 +59,9 @@ const App = () => {
           setPersons(persons.concat(person));
           showTimedNotification('info', `${person.name} added to phone book.`)
         })
-        .catch(error => showTimedNotification('error', `Error occurred while adding ${person.name} to phone book.`));
+        .catch(error => {
+          showTimedNotification('error', `Error occurred while adding ${person.name} to phone book. ${error.response.data.error}`);
+        });
     }
   };
 
