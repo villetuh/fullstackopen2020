@@ -1,16 +1,25 @@
 const listHelper = require('../utils/list_helper');
 
-test('dummy returns one', () => {
-  const blogs = [];
-
-  const result = listHelper.dummy(blogs);
-  expect(result).toBe(1);
-});
-
-describe('total likes', () => {
+describe('favorite blog', () => {
   const blogsList = [
     {
-      _id: '5ef8751c1da04a36ac05de9a',
+      _id: '1',
+      title: 'Best potatoes for cassaroles',
+      author: 'Teppo Töppönen',
+      url: 'https://blog.pottu.com/Best-potatoes-for-cassaroles',
+      likes: 2,
+      __v: 0
+    },
+    {
+      _id: '2',
+      title: 'French or Belgian fries?',
+      author: 'Jorma Teräs',
+      url: 'https://blog.pottu.com/french-or-belgian-fries',
+      likes: 5,
+      __v: 0
+    },
+    {
+      _id: '3',
       title: '10 things everyone should know about potatoes',
       author: 'Jorma Teräs',
       url: 'https://blog.pottu.com/10-things-about-potatoes',
@@ -18,7 +27,43 @@ describe('total likes', () => {
       __v: 0
     },
     {
-      _id: '5ef8751c1da04a36ac05de9a',
+      _id: '4',
+      title: '10 more things everyone should know about potatoes',
+      author: 'Matti Meikäläinen',
+      url: 'https://blog.pottu.com/10-more-things-about-potatoes',
+      likes: 3,
+      __v: 0
+    }
+  ];
+
+  test('undefined list returns undefined favorite', () => {
+    const result = listHelper.favoriteBlog(undefined);
+    expect(result).toBeUndefined();
+  });
+
+  test('empty list returns undefined favorite', () => {
+    const result = listHelper.favoriteBlog([]);
+    expect(result).toBeUndefined();
+  });
+
+  test('first blog with most likes is selected as favorite', () => {
+    const result = listHelper.favoriteBlog(blogsList);
+    expect(result).toEqual(blogsList[1]);
+  });
+});
+
+describe('total likes', () => {
+  const blogsList = [
+    {
+      _id: '1',
+      title: '10 things everyone should know about potatoes',
+      author: 'Jorma Teräs',
+      url: 'https://blog.pottu.com/10-things-about-potatoes',
+      likes: 5,
+      __v: 0
+    },
+    {
+      _id: '2',
       title: '10 more things everyone should know about potatoes',
       author: 'Matti Meikäläinen',
       url: 'https://blog.pottu.com/10-more-things-about-potatoes',
