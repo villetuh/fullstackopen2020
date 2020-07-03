@@ -51,6 +51,14 @@ test('specific blog is returned', async () => {
   expect(contents).toContain(initialBlogs[0].title);
 });
 
+test('unique identified named as id', async () => {
+  const response = await api.get('/api/blogs');
+
+  const firstBlog = response.body[0];
+
+  expect(firstBlog.id).toBeDefined();
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
