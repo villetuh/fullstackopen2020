@@ -103,6 +103,29 @@ test('likes default to 0 for new blog', async () => {
   expect(response.body.likes).toBe(0);
 });
 
+
+test('adding new blog without title returns a bad request response', async () => {
+  const newBlog = {
+    author: 'Pertti Peruna',
+    url: 'https://blog.pottu.com/10-potato-recipes-for-the-long-summer-nights'
+  };
+
+  await api.post('/api/blogs')
+    .send(newBlog)
+    .expect(400);
+});
+
+test('adding new blog without url returns a bad request response', async () => {
+  const newBlog = {
+    author: 'Pertti Peruna',
+    title: '10 potato recipes for the long summer nights',
+  };
+
+  await api.post('/api/blogs')
+    .send(newBlog)
+    .expect(400);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
