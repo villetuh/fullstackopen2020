@@ -103,7 +103,6 @@ test('likes default to 0 for new blog', async () => {
   expect(response.body.likes).toBe(0);
 });
 
-
 test('adding new blog without title returns a bad request response', async () => {
   const newBlog = {
     author: 'Pertti Peruna',
@@ -124,6 +123,18 @@ test('adding new blog without url returns a bad request response', async () => {
   await api.post('/api/blogs')
     .send(newBlog)
     .expect(400);
+});
+
+test('deleting blog removes it from database', async () => {
+  let response = await api.get('/api/blogs');
+  const originalBlogs = response.body;
+
+  await api.delete(`/api/blogs/${originalBlogs[0].id}`);
+
+  response = await api.get('/api/blogs');
+  const blogsAfterRemove = response.body;
+
+  expect(blogsAfterRemove).not.toContainEqual(originalBlogs[0]);
 });
 
 afterAll(() => {
