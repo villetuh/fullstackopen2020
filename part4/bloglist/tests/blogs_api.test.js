@@ -137,6 +137,21 @@ test('deleting blog removes it from database', async () => {
   expect(blogsAfterRemove).not.toContainEqual(originalBlogs[0]);
 });
 
+test('updating blog updates it to database', async () => {
+  let response = await api.get('/api/blogs');
+  const originalBlogs = response.body;
+
+  await api
+    .put(`/api/blogs/${originalBlogs[0].id}`)
+    .send({ ...originalBlogs[0], likes: 10 })
+    .expect(200);
+
+  response = await api.get('/api/blogs');
+  const updatedBlog = response.body.find(blog => blog.id === originalBlogs[0].id);
+
+  expect(updatedBlog.likes).toBe(10);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
