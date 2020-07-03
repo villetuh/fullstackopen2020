@@ -64,7 +64,7 @@ test('new blog is added', async () => {
     title: '10 potato recipes for the long summer nights',
     author: 'Pertti Peruna',
     url: 'https://blog.pottu.com/10-potato-recipes-for-the-long-summer-nights',
-    likes: 0
+    likes: 4
   };
 
   await api.post('/api/blogs')
@@ -85,6 +85,22 @@ test('new blog is added', async () => {
 
   expect(blogsWithoutId).toHaveLength(initialBlogs.length + 1);
   expect(blogsWithoutId).toContainEqual(newBlog);
+});
+
+test('likes default to 0 for new blog', async () => {
+  const newBlog = {
+    title: '10 potato recipes for the long summer nights',
+    author: 'Pertti Peruna',
+    url: 'https://blog.pottu.com/10-potato-recipes-for-the-long-summer-nights'
+  };
+
+  const response = await api.post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  expect(response.body.likes).toBeDefined();
+  expect(response.body.likes).toBe(0);
 });
 
 afterAll(() => {
