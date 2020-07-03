@@ -59,6 +59,34 @@ test('unique identified named as id', async () => {
   expect(firstBlog.id).toBeDefined();
 });
 
+test('new blog is added', async () => {
+  const newBlog = {
+    title: '10 potato recipes for the long summer nights',
+    author: 'Pertti Peruna',
+    url: 'https://blog.pottu.com/10-potato-recipes-for-the-long-summer-nights',
+    likes: 0
+  };
+
+  await api.post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const response = await api.get('/api/blogs');
+
+  const blogsWithoutId = response.body.map(blog => { 
+    return { 
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: blog.likes
+    };
+  });
+
+  expect(blogsWithoutId).toHaveLength(initialBlogs.length + 1);
+  expect(blogsWithoutId).toContainEqual(newBlog);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
