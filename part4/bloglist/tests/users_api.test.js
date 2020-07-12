@@ -71,8 +71,67 @@ describe('when there is initially one user in database', () => {
     const results = response.body.map(user => ({ username: user.username, name: user.name }));
     expect(results).toContainEqual(expectedUser);
   });
+});
 
-  afterAll(async () => {
-    mongoose.connection.close();
+describe('when adding a new user', () => {
+  test('if username isn\'t given response with status code bad request is returned', async () => {
+    const newUser = {
+      name: 'Tiina Testaaja',
+      password: 'abbaabc'
+    };
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
   });
+
+  test('if username is shorter than 3 character response with status code bad request is returned', async () => {
+    const newUser = {
+      username: 'ab',
+      name: 'Tiina Testaaja',
+      password: 'abbaabc'
+    };
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+  });
+
+
+  test('if password isn\'t given response with status code bad request is returned', async () => {
+    const newUser = {
+      username: 'testuser',
+      name: 'Tiina Testaaja'
+    };
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+  });
+
+  test('if password is shorter than 3 character response with status code bad request is returned', async () => {
+    const newUser = {
+      username: 'testuser',
+      name: 'Tiina Testaaja',
+      password: 'ab'
+    };
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+  });
+});
+
+
+
+afterAll(async () => {
+  mongoose.connection.close();
 });
