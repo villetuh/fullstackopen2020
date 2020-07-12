@@ -1,8 +1,10 @@
+const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const supertest = require('supertest');
 
 const app = require('../app');
 const Blog = require('../models/blog');
+const User = require('../models/user');
 
 const api = supertest(app);
 
@@ -22,12 +24,25 @@ const initialBlogs = [
 ];
 
 beforeEach(async () => {
+  await User.deleteMany({});
+
+  const passwordHash = await bcrypt.hash('sekret', 10);
+  const user = new User({
+    username: 'testuser',
+    name: 'Teemu Testaaja',
+    passwordHash
+  });
+
+  await user.save();
+
   await Blog.deleteMany({});
 
   let blog = new Blog(initialBlogs[0]);
+  blog.user = user._id;
   await blog.save();
 
   blog = new Blog(initialBlogs[1]);
+  blog.user = user._id;
   await blog.save();
 });
 
@@ -67,7 +82,11 @@ test('new blog is added', async () => {
     likes: 4
   };
 
+  const loginResponse = await api.post('/api/login')
+    .send({ username: 'testuser', password: 'sekret' });
+
   await api.post('/api/blogs')
+    .set('Authorization', 'Bearer ' + loginResponse.body.token)
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/);
@@ -87,6 +106,20 @@ test('new blog is added', async () => {
   expect(blogsWithoutId).toContainEqual(newBlog);
 });
 
+test('adding a new blog without token returns unauthorized response', async () => {
+  const newBlog = {
+    title: '10 potato recipes for the long summer nights',
+    author: 'Pertti Peruna',
+    url: 'https://blog.pottu.com/10-potato-recipes-for-the-long-summer-nights',
+    likes: 4
+  };
+
+  await api.post('/api/blogs')
+    .send(newBlog)
+    .expect(401)
+    .expect('Content-Type', /application\/json/);
+});
+
 test('likes default to 0 for new blog', async () => {
   const newBlog = {
     title: '10 potato recipes for the long summer nights',
@@ -94,7 +127,11 @@ test('likes default to 0 for new blog', async () => {
     url: 'https://blog.pottu.com/10-potato-recipes-for-the-long-summer-nights'
   };
 
+  const loginResponse = await api.post('/api/login')
+    .send({ username: 'testuser', password: 'sekret' });
+
   const response = await api.post('/api/blogs')
+    .set('Authorization', 'Bearer ' + loginResponse.body.token)
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/);
@@ -109,7 +146,11 @@ test('adding new blog without title returns a bad request response', async () =>
     url: 'https://blog.pottu.com/10-potato-recipes-for-the-long-summer-nights'
   };
 
+  const loginResponse = await api.post('/api/login')
+    .send({ username: 'testuser', password: 'sekret' });
+
   await api.post('/api/blogs')
+    .set('Authorization', 'Bearer ' + loginResponse.body.token)
     .send(newBlog)
     .expect(400);
 });
@@ -120,7 +161,11 @@ test('adding new blog without url returns a bad request response', async () => {
     title: '10 potato recipes for the long summer nights',
   };
 
+  const loginResponse = await api.post('/api/login')
+    .send({ username: 'testuser', password: 'sekret' });
+
   await api.post('/api/blogs')
+    .set('Authorization', 'Bearer ' + loginResponse.body.token)
     .send(newBlog)
     .expect(400);
 });
@@ -129,7 +174,11 @@ test('deleting blog removes it from database', async () => {
   let response = await api.get('/api/blogs');
   const originalBlogs = response.body;
 
-  await api.delete(`/api/blogs/${originalBlogs[0].id}`);
+  const loginResponse = await api.post('/api/login')
+    .send({ username: 'testuser', password: 'sekret' });
+
+  await api.delete(`/api/blogs/${originalBlogs[0].id}`)
+    .set('Authorization', 'Bearer ' + loginResponse.body.token);
 
   response = await api.get('/api/blogs');
   const blogsAfterRemove = response.body;
