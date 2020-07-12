@@ -1,6 +1,15 @@
+const jwt = require('jsonwebtoken');
 const blogsRouter = require('express').Router();
 const Blog = require('../models/blog');
 const User = require('../models/user');
+
+const getTokenFrom = request => {
+  const authorization = request.get('authorization');
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    return authorization.substring(7);
+  }
+  return null;
+};
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 });
@@ -8,8 +17,17 @@ blogsRouter.get('/', async (request, response) => {
 });
 
 blogsRouter.post('/', async (request, response) => {
-  const users = await User.find({});
-  const user = users[0];
+  const token = getTokenFrom(request);
+  if (!token) {
+    return response.status(401).json({ error: 'Unauthorized request.' });
+  }
+
+  const decodedToken = jwt.verify(token, process.env.SECRET);
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'Unauthorized request.' });
+  }
+  
+  const user = await User.findById(decodedToken.id);
 
   const blog = new Blog({
     ...request.body,
@@ -20,7 +38,7 @@ blogsRouter.post('/', async (request, response) => {
   
   user.blogs = user.blogs.concat(savedBlog._id);
   await user.save();
-  
+
   return response.status(201).json(savedBlog);
 });
 
