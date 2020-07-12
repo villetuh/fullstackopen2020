@@ -12,6 +12,7 @@ const app = express();
 
 mongoose.connect(config.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 
 app.use(cors());
 app.use(express.static('build'));

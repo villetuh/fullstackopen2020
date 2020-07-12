@@ -44,6 +44,20 @@ describe('when there is initially one user in db', () => {
     expect(usernames).toContain(newUser.username);
   });
 
+  test('adding a new user with existing username fails', async () => {
+    const newUser = {
+      username: 'testuser',
+      name: 'Tiina Testaaja',
+      password: 'abbaabc'
+    };
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+  });
+
   afterAll(async () => {
     mongoose.connection.close();
   });
