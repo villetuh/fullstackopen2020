@@ -8,7 +8,7 @@ const helper = require('./test_helper');
 
 const api = supertest(app);
 
-describe('when there is initially one user in db', () => {
+describe('when there is initially one user in database', () => {
   beforeEach(async () => {
     await User.deleteMany({});
 
@@ -56,6 +56,20 @@ describe('when there is initially one user in db', () => {
       .send(newUser)
       .expect(400)
       .expect('Content-Type', /application\/json/);
+  });
+
+  test('requesting users returns the user initially added to database', async () => {
+    const response = await api
+      .get('/api/users')
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    const expectedUser = {
+      username: 'testuser',
+      name: 'Teemu Testaaja',
+    };
+    const results = response.body.map(user => ({ username: user.username, name: user.name }));
+    expect(results).toContainEqual(expectedUser);
   });
 
   afterAll(async () => {
