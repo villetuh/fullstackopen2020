@@ -6,10 +6,22 @@ import blogService from './services/blogs';
 import loginService from './services/login';
 
 const App = () => {
+  const loggedInUserStorageKey = 'loggedInBloglistUser';
+
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUserJSON = window.localStorage.getItem(loggedInUserStorageKey);
+    if (storedUserJSON === null) {
+      return;
+    }
+
+    const user = JSON.parse(storedUserJSON);
+    setUser(user);
+  }, []);
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -25,6 +37,8 @@ const App = () => {
       setUser(user);
       setUsername('');
       setPassword('');
+
+      window.localStorage.setItem(loggedInUserStorageKey, JSON.stringify(user));
     } catch (exception) {
       console.log('Wrong credentials');
     }
