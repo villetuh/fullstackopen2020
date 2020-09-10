@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Blog from './components/Blog';
+import Blogs from './components/Blogs';
 import Login from './components/Login';
 import Logout from './components/Logout';
 
@@ -66,9 +66,7 @@ const App = () => {
       <div>
         <h2>blogs</h2>
         <Logout name={user.name} handleLogout={handleLogout} />
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
-        )}
+        <Blogs blogs={blogs} />
       </div>
     );
   }
