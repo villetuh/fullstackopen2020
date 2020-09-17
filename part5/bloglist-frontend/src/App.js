@@ -13,8 +13,7 @@ const App = () => {
   const loggedInUserStorageKey = 'loggedInBloglistUser';
 
   const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+
   const [user, setUser] = useState(null);
 
   const [notification, setNotification] = useState({ type: '', text: '' });
@@ -42,21 +41,23 @@ const App = () => {
     fetchBlogs();
   }, []);
 
-  const handleLogin = async (event) => {
-    event.preventDefault();
+  const loginUser = async (username, password) => {
+    let success = false;
     try {
       const user = await loginService.login({ username, password });
 
       setUser(user);
-      setUsername('');
-      setPassword('');
       blogService.setToken(user.token);
 
       window.localStorage.setItem(loggedInUserStorageKey, JSON.stringify(user));
+
+      success = true;
     } catch (exception) {
       showTimedNotification('error', 'wrong username or password');
       console.log('Wrong credentials');
     }
+
+    return success;
   }
 
   const handleLogout = () => {
@@ -84,11 +85,7 @@ const App = () => {
       <div>
         <Notification notification={notification} />
         <Login
-          username={username}
-          password={password}
-          handleLogin={handleLogin}
-          setUsername={setUsername}
-          setPassword={setPassword}
+          loginUser={loginUser}
         />
       </div>
     );
