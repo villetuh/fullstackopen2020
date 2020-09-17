@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import AddBlog from './components/AddBlog';
 import Blogs from './components/Blogs';
 import LoginControl from './components/LoginControl';
 import Notification from './components/Notification';
+import Toggleable from './components/Toggleable';
 
 import blogService from './services/blogs';
 import loginService from './services/login';
@@ -16,6 +17,8 @@ const App = () => {
   const [user, setUser] = useState(null);
 
   const [notification, setNotification] = useState({ type: '', text: '' });
+
+  const addBlogFromRef = useRef();
 
   useEffect(() => {
     const storedUserJSON = window.localStorage.getItem(loggedInUserStorageKey);
@@ -67,6 +70,7 @@ const App = () => {
   };
 
   const handleAddNewBlog = async (blog) => {
+    addBlogFromRef.current.toggleVisibility();
     const newBlog = await blogService.create(blog);
     setBlogs(blogs.concat(newBlog));
     showTimedNotification('info', 'New blog added.');
@@ -87,10 +91,10 @@ const App = () => {
       <LoginControl user={user} loginUser={loginUser} logoutUser={handleLogout} />
       <br />
       { user !== null &&
-        <div>
+        <Toggleable buttonLabel='add new blog' ref={addBlogFromRef}>
           <h3>add new blog</h3>
           <AddBlog onBlogAdded={handleAddNewBlog} />
-        </div>
+        </Toggleable>
       }
       <br />
       <h3>blogs</h3>
