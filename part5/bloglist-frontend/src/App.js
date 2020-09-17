@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import AddBlog from './components/AddBlog';
 import Blogs from './components/Blogs';
-import Login from './components/Login';
-import Logout from './components/Logout';
+import LoginControl from './components/LoginControl';
 import Notification from './components/Notification';
 
 import blogService from './services/blogs';
@@ -80,31 +79,24 @@ const App = () => {
     }, time);
   };
 
-  if (user === null) {
-    return(
-      <div>
-        <Notification notification={notification} />
-        <Login
-          loginUser={loginUser}
-        />
-      </div>
-    );
-  }
-  else {
-    return (
-      <div>
-        <h2>blog list</h2>
-        <Notification notification={notification} />
-        <Logout name={user.name} handleLogout={handleLogout} />
-        <br />
-        <h3>add new blog</h3>
-        <AddBlog onBlogAdded={handleAddNewBlog} />
-        <br />
-        <h3>blogs</h3>
-        <Blogs blogs={blogs} />
-      </div>
-    );
-  }
+  return (
+    <div>
+      <h2>blog list</h2>
+      <Notification notification={notification} />
+
+      <LoginControl user={user} loginUser={loginUser} logoutUser={handleLogout} />
+      <br />
+      { user !== null &&
+        <div>
+          <h3>add new blog</h3>
+          <AddBlog onBlogAdded={handleAddNewBlog} />
+        </div>
+      }
+      <br />
+      <h3>blogs</h3>
+      <Blogs blogs={blogs} />
+    </div>
+  );
 };
 
 export default App;
