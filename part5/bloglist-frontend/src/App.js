@@ -76,6 +76,16 @@ const App = () => {
     showTimedNotification('info', 'New blog added.');
   };
 
+  const handleAddLike = async (blog) => {
+    const updatedBlog = {
+      ...blog,
+      likes: blog.likes + 1
+    };
+    const newBlog = await blogService.update(updatedBlog);
+
+    setBlogs(blogs.filter(b => b.id !== blog.id).concat(newBlog));
+  };
+
   const showTimedNotification = (type, text, time = 5000) => {
     setNotification({ type, text });
     setTimeout(() => {
@@ -98,7 +108,7 @@ const App = () => {
       }
       <br />
       <h3>blogs</h3>
-      <Blogs blogs={blogs} />
+      <Blogs blogs={blogs} addLikeHandler={handleAddLike} />
     </div>
   );
 };
