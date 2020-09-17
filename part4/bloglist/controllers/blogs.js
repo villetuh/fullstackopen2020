@@ -57,14 +57,26 @@ blogsRouter.delete('/:id', async (request, response) => {
 });
 
 blogsRouter.put('/:id', async (request, response) => {
-  const updatedBlog = { 
+  if (!request.token) {
+    return response.status(401).json({ error: 'Unauthorized request.' });
+  }
+
+  const decodedToken = jwt.verify(request.token, process.env.SECRET);
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'Unauthorized request.' });
+  }
+  const user = await User.findById(decodedToken.id);
+
+  const updatedBlog = {
+    id: request.body.id,
     title: request.body.title,
     author: request.body.author,
     likes: request.body.likes,
-    url: request.body.url
+    url: request.body.url,
+    user: user._id
   };
-  await Blog.findOneAndUpdate(request.params.id, updatedBlog, { new: true });
-  return response.json(updatedBlog);
+  const newBlog = await Blog.findOneAndUpdate({_id: request.params.id}, updatedBlog, { new: true });
+  return response.json(newBlog);
 });
 
 module.exports = blogsRouter;
