@@ -9,7 +9,7 @@ const Login = ({ loginUser }) => {
     event.preventDefault();
 
     await loginUser(username, password);
-  }
+  };
 
   return (
     <div>
@@ -17,17 +17,17 @@ const Login = ({ loginUser }) => {
       <form onSubmit={handleLoginFormSubmit}>
         <div>
           username:
-        <input type="text" value={username} name="Username" onChange={({ target }) => setUsername(target.value)} />
+          <input type="text" value={username} name="Username" onChange={({ target }) => setUsername(target.value)} />
         </div>
         <div>
           password:
-        <input type="password" value={password} name="Password" onChange={({ target }) => setPassword(target.value)} />
+          <input type="password" value={password} name="Password" onChange={({ target }) => setPassword(target.value)} />
         </div>
         <button type="submit">login</button>
       </form>
     </div>
   );
-}
+};
 
 Login.propTypes = {
   loginUser: PropTypes.func.isRequired

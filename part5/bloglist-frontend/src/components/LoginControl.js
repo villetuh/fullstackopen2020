@@ -10,12 +10,12 @@ const LoginControl = ({ user, loginUser, logoutUser }) => {
     <div>
       { user === null
         ? <Toggleable buttonLabel='Login'>
-            <Login loginUser={loginUser} />
-          </Toggleable>
+          <Login loginUser={loginUser} />
+        </Toggleable>
         : <Logout name={user.name} handleLogout={logoutUser} />
       }
     </div>
   );
-}
+};
 
 export default LoginControl;

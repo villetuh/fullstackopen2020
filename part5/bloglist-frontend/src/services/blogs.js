@@ -36,6 +36,6 @@ const remove = async (blog) => {
 
 const setToken = token => {
   authorizationHeader = `bearer ${token}`;
-}
+};
 
 export default { getAll, create, update, remove, setToken };

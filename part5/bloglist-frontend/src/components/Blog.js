@@ -19,20 +19,21 @@ const Blog = ({ blog, currentUser, addLikeHandler, deleteBlogHandler }) => {
   const deleteButtonStyle = {
     backgroundColor: 'red',
     display: currentUser !== '' && blog.user.id === currentUser ? '' : 'none'
-  }
+  };
 
   return (
-  <div style={blogStyle}>
-    {blog.title}<button onClick={toggleDetails}>{showDetails ? 'hide' : 'view'}</button>
-    { showDetails &&
+    <div style={blogStyle}>
+      {blog.title}<button onClick={toggleDetails}>{showDetails ? 'hide' : 'view'}</button>
+      { showDetails &&
       <div>
       url: {blog.url} <br />
       likes: {blog.likes} <button onClick={() => addLikeHandler(blog)}>like</button> <br />
-      {blog.author} <br />
-      <button style={deleteButtonStyle} onClick={() => deleteBlogHandler(blog)}>Delete</button>
+        {blog.author} <br />
+        <button style={deleteButtonStyle} onClick={() => deleteBlogHandler(blog)}>Delete</button>
+      </div>
+      }
     </div>
-    }
-  </div>
-)};
+  );
+};
 
 export default Blog;

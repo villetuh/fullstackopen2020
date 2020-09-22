@@ -70,7 +70,7 @@ const App = () => {
     }
 
     return success;
-  }
+  };
 
   const handleLogout = () => {
     window.localStorage.removeItem(loggedInUserStorageKey);
