@@ -86,6 +86,11 @@ const App = () => {
     setBlogs(blogs.filter(b => b.id !== blog.id).concat(newBlog));
   };
 
+  const handleDeleteBlog = async (blog) => {
+    await blogService.remove(blog);
+    setBlogs(blogs.filter(b => b.id !== blog.id));
+  };
+
   const showTimedNotification = (type, text, time = 5000) => {
     setNotification({ type, text });
     setTimeout(() => {
@@ -108,7 +113,7 @@ const App = () => {
       }
       <br />
       <h3>blogs</h3>
-      <Blogs blogs={blogs} addLikeHandler={handleAddLike} />
+      <Blogs blogs={blogs} addLikeHandler={handleAddLike} deleteBlogHandler={handleDeleteBlog} />
     </div>
   );
 };

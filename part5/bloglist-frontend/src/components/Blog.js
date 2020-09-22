@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Blog = ({ blog, addLikeHandler }) => {
+const Blog = ({ blog, addLikeHandler, deleteBlogHandler }) => {
   const [showDetails, setShowDetails] = useState(false);
 
   const toggleDetails = () => {
@@ -23,7 +23,8 @@ const Blog = ({ blog, addLikeHandler }) => {
       <div>
       url: {blog.url} <br />
       likes: {blog.likes} <button onClick={() => addLikeHandler(blog)}>like</button> <br />
-      {blog.author}
+      {blog.author} <br />
+      <button style={{ backgroundColor: 'red' }} onClick={() => deleteBlogHandler(blog)}>Delete</button>
     </div>
     }
   </div>

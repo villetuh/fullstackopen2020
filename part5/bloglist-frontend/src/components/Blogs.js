@@ -1,7 +1,7 @@
 import React from 'react';
 import Blog from './Blog';
 
-const Blogs = ({ blogs, addLikeHandler }) => {
+const Blogs = ({ blogs, addLikeHandler, deleteBlogHandler }) => {
 
   const blogSorter = (first, second) => {
     if (first.likes < second.likes) {
@@ -17,7 +17,7 @@ const Blogs = ({ blogs, addLikeHandler }) => {
     <div>
       {
         blogs.sort(blogSorter)
-          .map(blog => <Blog key={blog.id} blog={blog} addLikeHandler={addLikeHandler} />)
+          .map(blog => <Blog key={blog.id} blog={blog} addLikeHandler={addLikeHandler} deleteBlogHandler={deleteBlogHandler} />)
       }
     </div>
   );
