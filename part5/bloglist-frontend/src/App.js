@@ -16,6 +16,8 @@ const App = () => {
 
   const [user, setUser] = useState(null);
 
+  const [currentUserId, setCurrentUserId] = useState('');
+
   const [notification, setNotification] = useState({ type: '', text: '' });
 
   const addBlogFromRef = useRef();
@@ -28,6 +30,10 @@ const App = () => {
 
     const user = JSON.parse(storedUserJSON);
     setUser(user);
+
+    const userId = JSON.parse(atob(user.token.split('.')[1])).id;
+    setCurrentUserId(userId);
+
     blogService.setToken(user.token);
   }, []);
 
@@ -49,6 +55,10 @@ const App = () => {
       const user = await loginService.login({ username, password });
 
       setUser(user);
+
+      const userId = JSON.parse(atob(user.token.split('.')[1])).id;
+      setCurrentUserId(userId);
+
       blogService.setToken(user.token);
 
       window.localStorage.setItem(loggedInUserStorageKey, JSON.stringify(user));
@@ -65,6 +75,7 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.removeItem(loggedInUserStorageKey);
     setUser(null);
+    setCurrentUserId('');
     blogService.setToken('');
     showTimedNotification('info', 'successfully logged out');
   };
@@ -91,7 +102,7 @@ const App = () => {
     if (result === false) {
       return;
     }
-    
+
     await blogService.remove(blog);
     setBlogs(blogs.filter(b => b.id !== blog.id));
   };
@@ -118,7 +129,12 @@ const App = () => {
       }
       <br />
       <h3>blogs</h3>
-      <Blogs blogs={blogs} addLikeHandler={handleAddLike} deleteBlogHandler={handleDeleteBlog} />
+      <Blogs
+        blogs={blogs}
+        currentUser={currentUserId}
+        addLikeHandler={handleAddLike}
+        deleteBlogHandler={handleDeleteBlog}
+      />
     </div>
   );
 };

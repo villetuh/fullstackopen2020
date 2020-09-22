@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Blog = ({ blog, addLikeHandler, deleteBlogHandler }) => {
+const Blog = ({ blog, currentUser, addLikeHandler, deleteBlogHandler }) => {
   const [showDetails, setShowDetails] = useState(false);
 
   const toggleDetails = () => {
@@ -16,6 +16,11 @@ const Blog = ({ blog, addLikeHandler, deleteBlogHandler }) => {
     marginBottom: 5
   };
 
+  const deleteButtonStyle = {
+    backgroundColor: 'red',
+    display: currentUser !== '' && blog.user.id === currentUser ? '' : 'none'
+  }
+
   return (
   <div style={blogStyle}>
     {blog.title}<button onClick={toggleDetails}>{showDetails ? 'hide' : 'view'}</button>
@@ -24,7 +29,7 @@ const Blog = ({ blog, addLikeHandler, deleteBlogHandler }) => {
       url: {blog.url} <br />
       likes: {blog.likes} <button onClick={() => addLikeHandler(blog)}>like</button> <br />
       {blog.author} <br />
-      <button style={{ backgroundColor: 'red' }} onClick={() => deleteBlogHandler(blog)}>Delete</button>
+      <button style={deleteButtonStyle} onClick={() => deleteBlogHandler(blog)}>Delete</button>
     </div>
     }
   </div>
