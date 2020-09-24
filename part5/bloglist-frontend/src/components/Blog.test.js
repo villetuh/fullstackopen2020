@@ -79,4 +79,21 @@ describe('<Blog />', () => {
     expect(component.container.querySelector('.blog-delete-button'))
       .toHaveTextContent('Delete');
   });
+
+  test('clicking like button twice invokes addLikeHandler twice', () => {
+    const blog = getDefaultBlog();
+
+    const addLikeMockHandler = jest.fn();
+    const deleteBlogMockHandler = jest.fn();
+
+    const component = render(
+      <Blog blog={blog} currentUser='' addLikeHandler={addLikeMockHandler} deleteBlogHandler={deleteBlogMockHandler} />
+    );
+
+    fireEvent.click(component.getByText('view'));
+    fireEvent.click(component.getByText('like'));
+    fireEvent.click(component.getByText('like'));
+
+    expect(addLikeMockHandler.mock.calls).toHaveLength(2);
+  });
 });
