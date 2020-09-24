@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import Blog from './Blog';
 
 const getDefaultBlog = () => {
@@ -44,5 +44,39 @@ describe('<Blog />', () => {
 
     expect(component.container.querySelector('blog-delete-button'))
       .toBeNull();
+  });
+
+  test('shows all the information after view details button is clicked', () => {
+    const blog = getDefaultBlog();
+
+    const addLikeMockHandler = jest.fn();
+    const deleteBlogMockHandler = jest.fn();
+
+    const component = render(
+      <Blog blog={blog} currentUser='' addLikeHandler={addLikeMockHandler} deleteBlogHandler={deleteBlogMockHandler} />
+    );
+
+    fireEvent.click(component.getByText('view'));
+
+    expect(component.container.querySelector('.blog-title'))
+      .toHaveTextContent(blog.title);
+
+    expect(component.container.querySelector('.blog-show-details-button'))
+      .toHaveTextContent('hide');
+
+    expect(component.container.querySelector('.blog-url'))
+      .toHaveTextContent('url: ' + blog.url);
+
+    expect(component.container.querySelector('.blog-likes'))
+      .toHaveTextContent('likes: ' + blog.likes.toString());
+
+    expect(component.container.querySelector('.blog-like-button'))
+      .toHaveTextContent('like');
+
+    expect(component.container.querySelector('.blog-author'))
+      .toHaveTextContent(blog.author);
+
+    expect(component.container.querySelector('.blog-delete-button'))
+      .toHaveTextContent('Delete');
   });
 });
