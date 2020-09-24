@@ -22,14 +22,30 @@ const Blog = ({ blog, currentUser, addLikeHandler, deleteBlogHandler }) => {
   };
 
   return (
-    <div style={blogStyle}>
-      {blog.title}<button onClick={toggleDetails}>{showDetails ? 'hide' : 'view'}</button>
+    <div className='blog' style={blogStyle}>
+      <div className='blog-info-row'>
+        <div className='blog-title'>
+          {blog.title}
+          <button className='blog-show-details-button' onClick={toggleDetails}>{showDetails ? 'hide' : 'view'}</button>
+        </div>
+      </div>
       { showDetails &&
       <div>
-      url: {blog.url} <br />
-      likes: {blog.likes} <button onClick={() => addLikeHandler(blog)}>like</button> <br />
-        {blog.author} <br />
-        <button style={deleteButtonStyle} onClick={() => deleteBlogHandler(blog)}>Delete</button>
+        <div className='blog-info-row'>
+          <div className='blog-url'>url: {blog.url}</div>
+        </div>
+        <div className='blog-info-row'>
+          <div className='blog-likes'>
+            likes: {blog.likes}
+            <button className='blog-like-button' onClick={() => addLikeHandler(blog)}>like</button>
+          </div>
+        </div>
+        <div className='blog-info-row'>
+          <div className='blog-author'>{blog.author}</div>
+        </div>
+        <div className='blog-info-row'>
+          <button className='blog-delete-button' style={deleteButtonStyle} onClick={() => deleteBlogHandler(blog)}>Delete</button>
+        </div>
       </div>
       }
     </div>
