@@ -36,4 +36,28 @@ describe('Blog app', function () {
       cy.get('.Notification-Error').should('contain', 'wrong username or password').and('have.css', 'color', 'rgb(255, 0, 0)');
     });
   });
+
+  describe('When logged in', function () {
+    beforeEach(function () {
+      cy.request('POST', 'http://localhost:3001/api/login/', {
+        username: 'test_user',
+        password: 'abba'
+      }).then(response => {
+        localStorage.setItem('loggedInBloglistUser', JSON.stringify(response.body));
+        cy.visit('http://localhost:3000/');
+      });
+    });
+
+    it('A blog can be created', function () {
+      cy.contains('add new blog').click();
+
+      cy.contains('title').find('input').type('What a great test blog');
+      cy.contains('author').find('input').type('Test User');
+      cy.contains('url').find('input').type('https://blogs.test.com/what-a-great-test-blog');
+
+      cy.get('.add-blog-form').contains('add').click();
+
+      cy.get('.blog-title').contains('What a great test blog');
+    });
+  });
 });
