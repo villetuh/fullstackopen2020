@@ -60,4 +60,36 @@ describe('Blog app', function () {
       cy.get('.blog-title').contains('What a great test blog');
     });
   });
+
+  describe('When blog list contains a blog', function () {
+    beforeEach(function () {
+      cy.request('POST', 'http://localhost:3001/api/login/', {
+        username: 'test_user',
+        password: 'abba'
+      }).then(response => {
+        localStorage.setItem('loggedInBloglistUser', JSON.stringify(response.body));
+
+        cy.request({
+          method: 'POST',
+          url: 'http://localhost:3001/api/blogs',
+          body: {
+            title: 'What a great test blog',
+            author: 'Test User',
+            url: 'https://blogs.test.com/what-a-great-test-blog'
+          },
+          headers: { Authorization: 'bearer ' + response.body.token }
+        });
+
+        cy.visit('http://localhost:3000');
+      });
+    });
+
+    it('user can like a blog post', function () {
+      cy.contains('What a great test blog').find('button').click();
+      cy.contains('likes: 0');
+
+      cy.contains('like').click();
+      cy.contains('likes: 1');
+    });
+  });
 });
