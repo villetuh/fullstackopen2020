@@ -138,4 +138,82 @@ describe('Blog app', function () {
       cy.contains('Delete').should('have.css', 'display', 'none');
     });
   });
+
+  describe('When blog list contains multiple blogs', function () {
+    beforeEach(function () {
+      cy.request('POST', 'http://localhost:3001/api/login/', {
+        username: 'test_user',
+        password: 'abba'
+      }).then(response => {
+        localStorage.setItem('loggedInBloglistUser', JSON.stringify(response.body));
+
+        cy.request({
+          method: 'POST',
+          url: 'http://localhost:3001/api/blogs',
+          body: {
+            title: 'Blog1',
+            author: 'Test User',
+            url: 'https://blogs.test.com/blog-1',
+            likes: 1
+          },
+          headers: { Authorization: 'bearer ' + response.body.token }
+        });
+
+        cy.request({
+          method: 'POST',
+          url: 'http://localhost:3001/api/blogs',
+          body: {
+            title: 'Blog2',
+            author: 'Test User',
+            url: 'https://blogs.test.com/blog-2',
+            likes: 2
+          },
+          headers: { Authorization: 'bearer ' + response.body.token }
+        });
+
+        cy.request({
+          method: 'POST',
+          url: 'http://localhost:3001/api/blogs',
+          body: {
+            title: 'Blog3',
+            author: 'Test User',
+            url: 'https://blogs.test.com/blog-3',
+            likes: 3
+          },
+          headers: { Authorization: 'bearer ' + response.body.token }
+        });
+
+        cy.request({
+          method: 'POST',
+          url: 'http://localhost:3001/api/blogs',
+          body: {
+            title: 'Blog4',
+            author: 'Test User',
+            url: 'https://blogs.test.com/blog-4',
+            likes: 3
+          },
+          headers: { Authorization: 'bearer ' + response.body.token }
+        });
+        cy.visit('http://localhost:3000');
+      });
+    });
+
+    it('blogs are ordered in order of likes', function () {
+      cy.contains('Blog1').find('button').click();
+      cy.contains('Blog2').find('button').click();
+      cy.contains('Blog3').find('button').click();
+      cy.contains('Blog4').find('button').click();
+
+      let currentMaxLikes = Number.MAX_VALUE;
+
+      cy.get('.blog-likes').each(($blog) => {
+        const likes = $blog.text().replace('likes: ', '').replace('like', '');
+
+        if (likes > currentMaxLikes) {
+          throw new Error('List is not correcntly ordered');
+        }
+        currentMaxLikes = likes;
+      });
+    });
+  });
 });
