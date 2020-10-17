@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import AnecdoteVoter from './AnecdoteVoter';
 
 const AnecdoteList = (props) => {
-  const anecdotes = useSelector(state => state.sort((a, b) => (a.votes > b.votes) ? -1 : (a.votes < b.votes) ? 1 : 0));
+  const anecdotes = useSelector(state => state.anecdotes.sort((a, b) => (a.votes > b.votes) ? -1 : (a.votes < b.votes) ? 1 : 0));
 
   return (
     <div>
