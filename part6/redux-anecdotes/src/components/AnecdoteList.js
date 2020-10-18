@@ -19,7 +19,7 @@ const AnecdoteList = (props) => {
           </div>
           <div>
             has {anecdote.votes}
-            <AnecdoteVoter id={anecdote.id} title={anecdote.content} />
+            <AnecdoteVoter anecdote={anecdote} />
           </div>
         </div>))
       }
