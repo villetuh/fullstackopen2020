@@ -1,18 +1,13 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import AnecdoteFilter from './AnecdoteFilter';
 import AnecdoteVoter from './AnecdoteVoter';
 
 const AnecdoteList = (props) => {
-  const anecdotes = useSelector(state =>
-    state.anecdotes
-      .filter(anecdote => anecdote.content.toLowerCase().includes(state.filter.toLowerCase()))
-      .sort((a, b) => (a.votes > b.votes) ? -1 : (a.votes < b.votes) ? 1 : 0));
-
   return (
     <div>
       <AnecdoteFilter />
-      {anecdotes.map(anecdote => (
+      {props.anecdotes.map(anecdote => (
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
@@ -27,4 +22,14 @@ const AnecdoteList = (props) => {
   );
 };
 
-export default AnecdoteList;
+const mapStateToProps = (state) => {
+  return {
+    anecdotes: state.anecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(state.filter.toLowerCase()))
+                  .sort((a, b) => (a.votes > b.votes) ? -1 : (a.votes < b.votes) ? 1 : 0),
+    filter: state.filter
+  };
+};
+
+const ConnectedAnecdotes = connect(mapStateToProps)(AnecdoteList);
+
+export default ConnectedAnecdotes;
