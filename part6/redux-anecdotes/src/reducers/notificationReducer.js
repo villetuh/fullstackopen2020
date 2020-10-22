@@ -1,5 +1,7 @@
 const initialState = '';
 
+var currentTimeoutId;
+
 const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'SET_NOTIFICATION':
@@ -18,7 +20,12 @@ export const setNotification = (notification, displayTimeInSeconds) => {
       data: notification
     });
 
-    setTimeout(() => dispatch({ type: 'REMOVE_NOTIFICATION' }), displayTimeInSeconds * 1000);
+    if (currentTimeoutId !== undefined) {
+      clearTimeout(currentTimeoutId);
+      currentTimeoutId = undefined;
+    }
+
+    currentTimeoutId = setTimeout(() => dispatch({ type: 'REMOVE_NOTIFICATION' }), displayTimeInSeconds * 1000);
   };
 };
 
