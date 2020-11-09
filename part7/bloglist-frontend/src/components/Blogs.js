@@ -1,7 +1,10 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+
 import Blog from './Blog';
 
-const Blogs = ({ blogs, currentUser, addLikeHandler, deleteBlogHandler }) => {
+const Blogs = ({ currentUser, addLikeHandler, deleteBlogHandler }) => {
+  const blogs = useSelector(state => state.blogs);
 
   const blogSorter = (first, second) => {
     if (first.likes < second.likes) {

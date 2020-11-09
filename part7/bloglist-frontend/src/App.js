@@ -8,6 +8,7 @@ import LoginControl from './components/LoginControl';
 import Notification from './components/Notification';
 import Toggleable from './components/Toggleable';
 
+import { createBlog, deleteBlog, initializeBlogs, likeBlog } from './reducers/blogReducer';
 import { setNotification } from './reducers/notificationReducer';
 
 import blogService from './services/blogs';
@@ -15,8 +16,6 @@ import loginService from './services/login';
 
 const App = () => {
   const loggedInUserStorageKey = 'loggedInBloglistUser';
-
-  const [blogs, setBlogs] = useState([]);
 
   const [user, setUser] = useState(null);
 
@@ -42,16 +41,8 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    async function fetchBlogs() {
-      try {
-        const blogs = await blogService.getAll();
-        setBlogs(blogs);
-      } catch (exception) {
-        console.log('Error occurred while fetching blogs.');
-      }
-    }
-    fetchBlogs();
-  }, []);
+    dispatch(initializeBlogs());
+  }, [dispatch]);
 
   const loginUser = async (username, password) => {
     let success = false;
@@ -86,19 +77,12 @@ const App = () => {
 
   const handleAddNewBlog = async (blog) => {
     addBlogFromRef.current.toggleVisibility();
-    const newBlog = await blogService.create(blog);
-    setBlogs(blogs.concat(newBlog));
+    dispatch(createBlog(blog));
     dispatch(setNotification({ type: 'info', text: 'New blog added.' }));
   };
 
   const handleAddLike = async (blog) => {
-    const updatedBlog = {
-      ...blog,
-      likes: blog.likes + 1
-    };
-    const newBlog = await blogService.update(updatedBlog);
-
-    setBlogs(blogs.filter(b => b.id !== blog.id).concat(newBlog));
+    dispatch(likeBlog(blog));
   };
 
   const handleDeleteBlog = async (blog) => {
@@ -107,8 +91,7 @@ const App = () => {
       return;
     }
 
-    await blogService.remove(blog);
-    setBlogs(blogs.filter(b => b.id !== blog.id));
+    dispatch(deleteBlog(blog));
   };
 
   return (
@@ -127,7 +110,6 @@ const App = () => {
       <br />
       <h3>blogs</h3>
       <Blogs
-        blogs={blogs}
         currentUser={currentUserId}
         addLikeHandler={handleAddLike}
         deleteBlogHandler={handleDeleteBlog}
