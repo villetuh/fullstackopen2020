@@ -3,8 +3,9 @@ import { useSelector } from 'react-redux';
 
 import Blog from './Blog';
 
-const Blogs = ({ currentUser, addLikeHandler, deleteBlogHandler }) => {
+const Blogs = ({ addLikeHandler, deleteBlogHandler }) => {
   const blogs = useSelector(state => state.blogs);
+  const currentUserId = useSelector(state => state.currentUser.userId);
 
   const blogSorter = (first, second) => {
     if (first.likes < second.likes) {
@@ -24,7 +25,7 @@ const Blogs = ({ currentUser, addLikeHandler, deleteBlogHandler }) => {
             <Blog
               key={blog.id}
               blog={blog}
-              currentUser={currentUser}
+              currentUser={currentUserId}
               addLikeHandler={addLikeHandler}
               deleteBlogHandler={deleteBlogHandler}
             />)
