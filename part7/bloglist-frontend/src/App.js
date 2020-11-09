@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+import { useDispatch } from 'react-redux';
+
 import AddBlog from './components/AddBlog';
 import Blogs from './components/Blogs';
 import LoginControl from './components/LoginControl';
 import Notification from './components/Notification';
 import Toggleable from './components/Toggleable';
+
+import { setNotification } from './reducers/notificationReducer';
 
 import blogService from './services/blogs';
 import loginService from './services/login';
@@ -18,9 +22,9 @@ const App = () => {
 
   const [currentUserId, setCurrentUserId] = useState('');
 
-  const [notification, setNotification] = useState({ type: '', text: '' });
-
   const addBlogFromRef = useRef();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const storedUserJSON = window.localStorage.getItem(loggedInUserStorageKey);
@@ -65,7 +69,7 @@ const App = () => {
 
       success = true;
     } catch (exception) {
-      showTimedNotification('error', 'wrong username or password');
+      dispatch(setNotification({ type: 'error', text: 'wrong username or password' }));
       console.log('Wrong credentials');
     }
 
@@ -77,14 +81,14 @@ const App = () => {
     setUser(null);
     setCurrentUserId('');
     blogService.setToken('');
-    showTimedNotification('info', 'successfully logged out');
+    dispatch(setNotification({ type: 'info', text: 'successfully logged out' }));
   };
 
   const handleAddNewBlog = async (blog) => {
     addBlogFromRef.current.toggleVisibility();
     const newBlog = await blogService.create(blog);
     setBlogs(blogs.concat(newBlog));
-    showTimedNotification('info', 'New blog added.');
+    dispatch(setNotification({ type: 'info', text: 'New blog added.' }));
   };
 
   const handleAddLike = async (blog) => {
@@ -107,17 +111,10 @@ const App = () => {
     setBlogs(blogs.filter(b => b.id !== blog.id));
   };
 
-  const showTimedNotification = (type, text, time = 5000) => {
-    setNotification({ type, text });
-    setTimeout(() => {
-      setNotification(null);
-    }, time);
-  };
-
   return (
     <div>
       <h2>blog list</h2>
-      <Notification notification={notification} />
+      <Notification />
 
       <LoginControl user={user} loginUser={loginUser} logoutUser={handleLogout} />
       <br />
