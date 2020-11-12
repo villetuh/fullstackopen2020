@@ -5,7 +5,7 @@ import Blog from './Blog';
 
 const Blogs = ({ addLikeHandler, deleteBlogHandler }) => {
   const blogs = useSelector(state => state.blogs);
-  const currentUserId = useSelector(state => state.currentUser.userId);
+  const currentUserId = useSelector(state => state.users.userId);
 
   const blogSorter = (first, second) => {
     if (first.likes < second.likes) {

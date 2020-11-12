@@ -9,7 +9,7 @@ import userReducer from './reducers/userReducer';
 const store = createStore(
   combineReducers({
     blogs: blogReducer,
-    currentUser: userReducer,
+    users: userReducer,
     notification: notificationReducer
   }),
   composeWithDevTools(
