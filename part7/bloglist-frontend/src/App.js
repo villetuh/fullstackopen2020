@@ -9,6 +9,7 @@ import Blogs from './components/Blogs';
 import LoginControl from './components/LoginControl';
 import Notification from './components/Notification';
 import Toggleable from './components/Toggleable';
+import User from './components/User';
 import Users from './components/Users';
 
 import { createBlog, deleteBlog, initializeBlogs, likeBlog } from './reducers/blogReducer';
@@ -110,6 +111,9 @@ const App = () => {
       <br />
       <BrowserRouter>
         <Switch>
+          <Route path="/users/:id">
+            <User />
+          </Route>
           <Route path="/users">
             <Users />
           </Route>
