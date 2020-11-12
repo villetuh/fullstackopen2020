@@ -1,53 +1,65 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
-const Blog = ({ blog, currentUser, addLikeHandler, deleteBlogHandler }) => {
-  const [showDetails, setShowDetails] = useState(false);
+import { deleteBlog, likeBlog } from '../reducers/blogReducer';
 
-  const toggleDetails = () => {
-    setShowDetails(!showDetails);
+const Blog = () => {
+  const blogId = useParams().id;
+
+  const blog = useSelector(state => state.blogs.find(blog => blog.id === blogId));
+  const currentUserId = useSelector(state => state.users.userId);
+
+  const dispatch = useDispatch();
+
+  const handleAddLike = async (blog) => {
+    dispatch(likeBlog(blog));
   };
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
+  const handleDeleteBlog = async (blog) => {
+    const result = window.confirm('Do you want to delete the blog?');
+    if (result === false) {
+      return;
+    }
+
+    dispatch(deleteBlog(blog));
   };
+
+  if (!blog) {
+    return null;
+  }
 
   const deleteButtonStyle = {
     backgroundColor: 'red',
-    display: currentUser !== '' && blog.user.id === currentUser ? '' : 'none'
+    display: currentUserId !== '' && blog.user.id === currentUserId ? '' : 'none'
   };
 
   return (
-    <div className='blog' style={blogStyle}>
+    <div className='blog'>
       <div className='blog-info-row'>
         <div className='blog-title'>
-          {blog.title}
-          <button className='blog-show-details-button' onClick={toggleDetails}>{showDetails ? 'hide' : 'view'}</button>
+          <h2>{blog.title} by {blog.author}</h2>
         </div>
       </div>
-      { showDetails &&
       <div>
         <div className='blog-info-row'>
-          <div className='blog-url'>url: {blog.url}</div>
+          <div className='blog-url'>url: <a href={blog.url}>{blog.url}</a></div>
         </div>
         <div className='blog-info-row'>
           <div className='blog-likes'>
             likes: {blog.likes}
-            <button className='blog-like-button' onClick={() => addLikeHandler(blog)}>like</button>
+            <button className='blog-like-button' onClick={() => handleAddLike(blog)}>like</button>
           </div>
         </div>
         <div className='blog-info-row'>
-          <div className='blog-author'>{blog.author}</div>
+          <div className='blog-likes'>
+            added by: {blog.user.name}
+          </div>
         </div>
         <div className='blog-info-row'>
-          <button className='blog-delete-button' style={deleteButtonStyle} onClick={() => deleteBlogHandler(blog)}>Delete</button>
+          <button className='blog-delete-button' style={deleteButtonStyle} onClick={() => handleDeleteBlog(blog)}>Delete</button>
         </div>
       </div>
-      }
     </div>
   );
 };

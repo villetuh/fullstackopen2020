@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import AddBlog from './components/AddBlog';
+import Blog from './components/Blog';
 import Blogs from './components/Blogs';
 import LoginControl from './components/LoginControl';
 import Notification from './components/Notification';
@@ -12,7 +13,7 @@ import Toggleable from './components/Toggleable';
 import User from './components/User';
 import Users from './components/Users';
 
-import { createBlog, deleteBlog, initializeBlogs, likeBlog } from './reducers/blogReducer';
+import { createBlog, initializeBlogs } from './reducers/blogReducer';
 import { setNotification } from './reducers/notificationReducer';
 import { clearCurrentUser, initializeUsers, setCurrentUser } from './reducers/userReducer';
 
@@ -82,19 +83,6 @@ const App = () => {
     dispatch(setNotification({ type: 'info', text: 'New blog added.' }));
   };
 
-  const handleAddLike = async (blog) => {
-    dispatch(likeBlog(blog));
-  };
-
-  const handleDeleteBlog = async (blog) => {
-    const result = window.confirm('Do you want to delete the blog?');
-    if (result === false) {
-      return;
-    }
-
-    dispatch(deleteBlog(blog));
-  };
-
   return (
     <div>
       <h2>blog list</h2>
@@ -117,12 +105,14 @@ const App = () => {
           <Route path="/users">
             <Users />
           </Route>
+          <Route path="/blogs/:id">
+            <Blog />
+          </Route>
+          <Route path="/blogs">
+            <Blogs />
+          </Route>
           <Route path="/">
-            <h3>blogs</h3>
-            <Blogs
-              addLikeHandler={handleAddLike}
-              deleteBlogHandler={handleDeleteBlog}
-            />
+            <Blogs />
           </Route>
         </Switch>
       </BrowserRouter>
