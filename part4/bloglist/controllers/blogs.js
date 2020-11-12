@@ -66,15 +66,13 @@ blogsRouter.put('/:id', async (request, response) => {
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'Unauthorized request.' });
   }
-  const user = await User.findById(decodedToken.id);
-
+  
   const updatedBlog = {
     id: request.body.id,
     title: request.body.title,
     author: request.body.author,
     likes: request.body.likes,
-    url: request.body.url,
-    user: user._id
+    url: request.body.url
   };
   const newBlog = await Blog.findOneAndUpdate({_id: request.params.id}, updatedBlog, { new: true });
   await newBlog.populate('user', { username: 1, name: 1}).execPopulate();
