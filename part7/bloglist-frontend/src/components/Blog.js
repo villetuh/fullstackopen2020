@@ -62,7 +62,7 @@ const Blog = () => {
           <button className='blog-delete-button' style={deleteButtonStyle} onClick={() => handleDeleteBlog(blog)}>Delete</button>
         </div>
       </div>
-      <Comments comments={blog.comments} />
+      <Comments blog={blog} comments={blog.comments} />
     </div>
   );
 };

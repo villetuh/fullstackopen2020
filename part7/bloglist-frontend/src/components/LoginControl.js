@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import blogService from '../services/blogs';
+import commentsService from '../services/comments';
 import loginService from '../services/login';
 
 import { setNotification } from '../reducers/notificationReducer';
@@ -28,6 +29,7 @@ const LoginControl = () => {
     dispatch(setCurrentUser(userId, user));
 
     blogService.setToken(user.token);
+    commentsService.setToken(user.token);
   }, [dispatch]);
 
   const loginUser = async (username, password) => {
@@ -38,6 +40,7 @@ const LoginControl = () => {
       dispatch(setCurrentUser(userId, user));
 
       blogService.setToken(user.token);
+      commentsService.setToken(user.token);
 
       window.localStorage.setItem(loggedInUserStorageKey, JSON.stringify(user));
 
@@ -55,6 +58,7 @@ const LoginControl = () => {
     dispatch(clearCurrentUser());
 
     blogService.setToken('');
+    commentsService.setToken('');
     dispatch(setNotification({ type: 'info', text: 'successfully logged out' }));
   };
 

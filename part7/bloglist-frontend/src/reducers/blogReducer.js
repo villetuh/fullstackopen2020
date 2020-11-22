@@ -1,4 +1,5 @@
 import blogService from '../services/blogs';
+import commentsService from '../services/comments';
 
 const blogReducer = (state = [], action) => {
   switch (action.type) {
@@ -59,6 +60,17 @@ export const deleteBlog = (blog) => {
     dispatch({
       type: 'REMOVE_BLOG',
       data: blog
+    });
+  };
+};
+
+export const addComment = (blog, comment) => {
+  return async dispatch => {
+    const newComments = [...blog.comments, comment];
+    await commentsService.create(blog.id, newComments);
+    dispatch({
+      type: 'UPDATE_BLOG',
+      data: { ...blog, comments: newComments }
     });
   };
 };
