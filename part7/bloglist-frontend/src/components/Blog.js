@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom';
 
 import { deleteBlog, likeBlog } from '../reducers/blogReducer';
 
+import Comments from './Comments';
+
 const Blog = () => {
   const blogId = useParams().id;
 
@@ -60,6 +62,7 @@ const Blog = () => {
           <button className='blog-delete-button' style={deleteButtonStyle} onClick={() => handleDeleteBlog(blog)}>Delete</button>
         </div>
       </div>
+      <Comments comments={blog.comments} />
     </div>
   );
 };
