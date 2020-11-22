@@ -11,19 +11,33 @@ const Login = ({ loginUser }) => {
     await loginUser(username, password);
   };
 
+  const loginControlDivStyle = {
+    display: 'inline-block',
+    marginRight: '5px'
+  };
+
   return (
     <div>
-      <h2>Log in to the application</h2>
-      <form onSubmit={handleLoginFormSubmit}>
-        <div>
+      <form onSubmit={handleLoginFormSubmit} >
+        <div style={loginControlDivStyle}>
           username:
-          <input type="text" value={username} name="Username" onChange={({ target }) => setUsername(target.value)} />
+          <input
+            type="text"
+            value={username}
+            name="Username"
+            onChange={({ target }) => setUsername(target.value)}
+            style={{ width: '80px' }} />
         </div>
-        <div>
+        <div style={loginControlDivStyle}>
           password:
-          <input type="password" value={password} name="Password" onChange={({ target }) => setPassword(target.value)} />
+          <input
+            type="password"
+            value={password}
+            name="Password"
+            onChange={({ target }) => setPassword(target.value)}
+            style={{ width: '80px' }} />
         </div>
-        <button type="submit">login</button>
+        <button type="submit" style={loginControlDivStyle}>login</button>
       </form>
     </div>
   );
