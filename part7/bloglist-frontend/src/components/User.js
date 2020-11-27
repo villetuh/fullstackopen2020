@@ -1,6 +1,12 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
+
+const SmallerTitle = styled.h3`
+  font-family: 'PT Sans', sans-serif;
+  font-weight: bold;
+`;
 
 const User = () => {
   const userId = useParams().id;
@@ -12,8 +18,8 @@ const User = () => {
 
   return (
     <div>
-      <h2>{user.name}</h2>
-      <h3>added blogs</h3>
+      <SmallerTitle>{user.name}</SmallerTitle>
+      <SmallerTitle>Added blogs</SmallerTitle>
       <ul>
         {
           user.blogs.map(blog =>

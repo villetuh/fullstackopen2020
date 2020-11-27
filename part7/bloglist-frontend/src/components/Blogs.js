@@ -1,6 +1,26 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+
+const SmallerTitle = styled.h3`
+  font-family: 'PT Sans', sans-serif;
+  font-weight: bold;
+`;
+
+const Blog = styled.div`
+  padding: 10px 10px 10px 10px;
+  margin-bottom: 10px;
+  box-shadow: 0px 1px 3px 0px;
+  border-radius: 4px;
+`;
+
+const StyledLink = styled(Link)`
+  padding: 1em;
+  background: 'white';
+  text-decoration: none;
+  color: teal;
+`;
 
 const Blogs = () => {
   const blogs = useSelector(state => state.blogs);
@@ -15,28 +35,19 @@ const Blogs = () => {
     return first.title.toLowerCase() <= second.title.toLowerCase() ? -1 : 1;
   };
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  };
-
   return (
     <div>
-      <h3>blogs</h3>
+      <SmallerTitle>Blogs</SmallerTitle>
       {
         blogs.sort(blogSorter)
           .map(blog =>
-            <div key={blog.id} style={blogStyle}>
+            <Blog key={blog.id}>
               <div className='blog-info-row'>
                 <div className='blog-title'>
-                  {blog.likes} likes <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                  {blog.likes} likes <StyledLink to={`/blogs/${blog.id}`}>{blog.title}</StyledLink>
                 </div>
               </div>
-            </div>)
+            </Blog>)
       }
     </div>
   );

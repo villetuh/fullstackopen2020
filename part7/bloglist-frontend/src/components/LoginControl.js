@@ -63,12 +63,12 @@ const LoginControl = () => {
   };
 
   return (
-    <div>
+    <span>
       { currentUser === null
         ? <Login loginUser={loginUser} />
         : <Logout name={currentUser.name} handleLogout={handleLogout} />
       }
-    </div>
+    </span>
   );
 };
 

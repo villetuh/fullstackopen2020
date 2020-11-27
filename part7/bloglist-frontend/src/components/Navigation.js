@@ -1,20 +1,38 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import styled from 'styled-components';
+
+const Container = styled.div`
+  display: inline-block;
+`;
+
+const LinkContainer = styled.div`
+  display: inline-block;
+  margin-bottom: 2px;
+`;
+
+const StyledLink = styled(Link)`
+  padding: 1em;
+  background: 'white';
+  border-style: ${props => props.selected ? 'solid' : 'none'};
+  border-width: ${props => props.selected ? '0px 0px 4px 0px' : '0px'};
+  text-decoration: none;
+  font-weight: ${props => props.selected ? 'bold' : 'normal'};
+  color: teal;
+`;
 
 const Navigation = () => {
-  const linkStyle = {
-    display: 'inline-block',
-    marginRight: '5px'
-  };
+  const location = useLocation();
+
   return (
-    <div style={{ display: 'inline-block' }}>
-      <div style={linkStyle}>
-        <Link to='/blogs'>Blogs</Link>
-      </div>
-      <div style={linkStyle}>
-        <Link to='/users'>Users</Link>
-      </div>
-    </div>
+    <Container>
+      <LinkContainer>
+        <StyledLink to='/blogs' selected={location.pathname.startsWith('/blogs') || location.pathname === '/'}>Blogs</StyledLink>
+      </LinkContainer>
+      <LinkContainer>
+        <StyledLink to='/users' selected={location.pathname.startsWith('/users')}>Users</StyledLink>
+      </LinkContainer>
+    </Container>
   );
 };
 

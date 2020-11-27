@@ -1,5 +1,18 @@
 import React, { useState, useImperativeHandle } from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
+
+const Button = styled.button`
+  background: ${props => props.primary ? 'teal' : 'white'};
+  color: ${props => props.primary ? 'white' : 'teal'};
+  margin: 2px;
+  padding: 6px 12px;
+  font-size: medium;
+  border-style: solid;
+  border-color: teal;
+  border-radius: 4px;
+  border-width: 1px;
+`;
 
 const Toggleable = React.forwardRef((props, ref) => {
   const [visible, setVisible] = useState(false);
@@ -15,11 +28,11 @@ const Toggleable = React.forwardRef((props, ref) => {
   return (
     <div>
       <div style={{ display: visible ? 'none' : '' }}>
-        <button onClick={toggleVisibility}>{ props.buttonLabel }</button>
+        <Button primary={true} onClick={toggleVisibility}>{ props.buttonLabel }</Button>
       </div>
       <div style={{ display: visible ? '' : 'none' }}>
         {props.children}
-        <button onClick={toggleVisibility}>cancel</button>
+        <Button onClick={toggleVisibility}>Cancel</Button>
       </div>
     </div>
   );
