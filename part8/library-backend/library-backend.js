@@ -58,7 +58,11 @@ const resolvers = {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
     allBooks: (root, args) => {
-      return Book.find({}).populate('author');
+      if (args.genre === undefined && args.author === undefined)
+        return Book.find({}).populate('author');
+      else if (args.genre)
+        return Book.find({ genres: args.genre }).populate('author');
+      return [];
     },
     allAuthors: () => Author.find({})
   },
