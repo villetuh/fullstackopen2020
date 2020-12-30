@@ -14,7 +14,9 @@ export const ALL_BOOKS_WITHOUT_GENRE = gql`
   query {
     allBooks {
       title,
-      author,
+      author {
+        name
+      },
       published
     }
   }
