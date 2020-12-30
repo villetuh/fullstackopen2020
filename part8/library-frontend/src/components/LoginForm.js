@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useMutation } from '@apollo/client';
 
-import { ALL_AUTHORS, ALL_BOOKS_WITHOUT_GENRE, LOGIN } from '../queries';
+import { ALL_AUTHORS, ALL_BOOKS, LOGIN } from '../queries';
 
 const LoginForm = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const [ login, result ] = useMutation(LOGIN, {
-    refetchQueries: [ { query: ALL_AUTHORS }, { query: ALL_BOOKS_WITHOUT_GENRE }],
+    refetchQueries: [ { query: ALL_AUTHORS }, { query: ALL_BOOKS }],
     onError: (error) => {
       console.log(error.graphQLErrors);
     }

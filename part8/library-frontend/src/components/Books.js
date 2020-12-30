@@ -1,17 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useQuery } from '@apollo/client';
 
-import { ALL_BOOKS_WITHOUT_GENRE } from '../queries';
+import { ALL_BOOKS } from '../queries';
 
 const Books = (props) => {
-  const result = useQuery(ALL_BOOKS_WITHOUT_GENRE);
+  const [ genre, setGenre ] = useState('all');
+  const result = useQuery(ALL_BOOKS);
 
   if (!props.show || result.loading) {
     return null;
   }
 
   const books = result.data.allBooks;
+  const genres = books.reduce((acc, cur,) => {
+    if (!cur.genres)
+      return acc;
+
+    cur.genres.forEach(genre => {
+      if (!acc.includes(genre))
+        acc.push(genre);
+    });
+    return acc;
+  }, []);
+
+  genres.push('all');
+
+  const booksWithSelectedGenre = genre === 'all'
+                                  ? books
+                                  : books.filter(book => book.genres.includes(genre));
 
   return (
     <div>
@@ -28,7 +45,7 @@ const Books = (props) => {
               published
             </th>
           </tr>
-          {books.map(a =>
+          {booksWithSelectedGenre.map(a =>
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>
@@ -37,6 +54,9 @@ const Books = (props) => {
           )}
         </tbody>
       </table>
+      <div>
+        {genres.map(genre => <button key={genre} onClick={() => setGenre(genre)}>{genre}</button>)}
+      </div>
     </div>
   );
 };
