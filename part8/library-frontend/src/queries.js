@@ -52,6 +52,15 @@ export const LOGIN = gql`
   }
 `;
 
+export const GET_USER_INFO = gql`
+  query {
+    me {
+      username,
+      favoriteGenre
+    }
+  }
+`;
+
 export const UPDATE_AUTHOR = gql`
   mutation updateAuthor($author: String!, $setBornYear: Int!) {
     editAuthor(
