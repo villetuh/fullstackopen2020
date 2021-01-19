@@ -12,7 +12,7 @@ const defaultPage = 'authors';
 
 const App = () => {
   const [page, setPage] = useState(defaultPage);
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem('library-user-token'));
 
   const client = useApolloClient();
 
