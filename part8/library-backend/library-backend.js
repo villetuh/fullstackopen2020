@@ -1,4 +1,6 @@
 const { ApolloServer, gql, UserInputError, AuthenticationError, PubSub } = require('apollo-server');
+const DataLoader = require('dataloader');
+
 const { v1: uuid } = require('uuid');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
@@ -92,14 +94,16 @@ const resolvers = {
         return Book.find({ genres: args.genre }).populate('author');
       return [];
     },
-    allAuthors: () => Author.find({}),
+    allAuthors: async () => {
+      return await Author.find({});
+    },
     me: (root, args, context) => {
       return context.currentUser;
     }
   },
   Author: {
-    bookCount: async (root) => {
-      const books = await Book.find({ author: root._id });
+    bookCount: async (root, args, { loaders }) => {
+      const books = await loaders.books.load(root._id);
       return books.length;
     }
   },
@@ -188,6 +192,14 @@ const resolvers = {
   }
 };
 
+const batchBooks = async (authors) => {
+  const books = await Book.find({
+    author: { $in: authors }
+  });
+
+  return authors.map(author => books.filter(book => book.author.equals(author)));
+};
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -197,8 +209,15 @@ const server = new ApolloServer({
       const decodedToken = jwt.verify(
         auth.substring(7), JWT_SECRET
       );
-      const currentUser = await User.findById(decodedToken.id);
-      return { currentUser }
+      if (req) {
+        const currentUser = await User.findById(decodedToken.id);
+        return {
+          currentUser,
+          loaders: {
+            books: new DataLoader(authors => batchBooks(authors))
+          }
+        }
+      }
     }
   }
 });
