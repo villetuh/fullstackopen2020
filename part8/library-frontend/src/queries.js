@@ -37,6 +37,19 @@ export const ALL_BOOKS_OF_GENRE = gql`
   }
 `;
 
+export const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      title,
+      author {
+        name
+      },
+      published,
+      genres
+    }
+  }
+`;
+
 export const CREATE_BOOK = gql`
   mutation createBook($title: String!, $author: String!, $published: Int!, $genres: [String!]!) {
     addBook(
