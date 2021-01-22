@@ -74,7 +74,7 @@ const App = () => {
       />
 
       <NewBook
-        show={page === 'add'}
+        show={page === 'add'} updateCacheWith={updateCacheWith}
       />
 
       <Recommendations
