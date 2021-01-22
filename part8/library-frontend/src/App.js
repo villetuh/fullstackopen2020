@@ -8,7 +8,7 @@ import NewBook from './components/NewBook';
 import LoginForm from './components/LoginForm';
 import Recommendations from './components/Recommendations';
 
-import { BOOK_ADDED } from './queries';
+import { ALL_BOOKS, BOOK_ADDED } from './queries';
 
 const defaultPage = 'authors';
 
@@ -18,9 +18,25 @@ const App = () => {
 
   const client = useApolloClient();
 
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (set, object) => {
+      return set.map(p => p.id).includes(object.id);
+    }
+
+    const dataInStore = client.readQuery({ query: ALL_BOOKS });
+
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+      client.writeQuery({
+        query: ALL_BOOKS,
+        data: { allBooks: dataInStore.allBooks.concat(addedBook) }
+      })
+    }
+  };
+
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
-      window.alert(`Book added: ${subscriptionData.data.bookAdded.title} by ${subscriptionData.data.bookAdded.author.name}`);
+      const addedBook = subscriptionData.data.bookAdded;
+      updateCacheWith(addedBook);
     }
   })
 
