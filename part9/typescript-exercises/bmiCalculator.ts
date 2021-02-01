@@ -3,7 +3,7 @@ interface PersonDetails {
   weightInKg: number
 }
 
-const calculateBmi = (heightInCm: number, weightInKg: number): string => {
+export const calculateBmi = (heightInCm: number, weightInKg: number): string => {
   // BMI = weightInKg / heightInM^2
   const bmiValue = weightInKg / Math.pow(heightInCm / 100, 2);
   return translateBmiValueToCategory(bmiValue);
@@ -43,5 +43,9 @@ const parseBMIArguments = (args: Array<string>): PersonDetails => {
   }
 }
 
-const personDetails = parseBMIArguments(process.argv);
-console.log(calculateBmi(personDetails.heightInCm, personDetails.weightInKg));
+try {
+  const personDetails = parseBMIArguments(process.argv);
+  console.log(calculateBmi(personDetails.heightInCm, personDetails.weightInKg));  
+} catch (e) {
+  console.log('Something happened.', e.message);
+}
