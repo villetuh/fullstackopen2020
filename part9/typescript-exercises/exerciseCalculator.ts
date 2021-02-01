@@ -13,7 +13,7 @@ interface ExerciseArguments {
   dailyExerciseAmounts: Array<number>
 }
 
-const calculateExercises = (targetDailyAmount: number, dailyExerciseAmounts: Array<number>): ExerciseInformation => {
+export const calculateExercises = (targetDailyAmount: number, dailyExerciseAmounts: Array<number>): ExerciseInformation => {
   const averageDailyAmount = dailyExerciseAmounts.reduce((prev, current) => prev + current) / dailyExerciseAmounts.length;
 
   const averageToTargetRatio = averageDailyAmount / targetDailyAmount;
@@ -62,5 +62,9 @@ const parseExerciseArguments = (args: Array<string>): ExerciseArguments => {
   };
 };
 
-const exerciseArguments = parseExerciseArguments(process.argv);
-console.log(calculateExercises(exerciseArguments.target, exerciseArguments.dailyExerciseAmounts));
+try {
+  const exerciseArguments = parseExerciseArguments(process.argv);
+  console.log(calculateExercises(exerciseArguments.target, exerciseArguments.dailyExerciseAmounts));  
+} catch (e) {
+  console.log('Something happened.', (<Error>e).message);
+}
