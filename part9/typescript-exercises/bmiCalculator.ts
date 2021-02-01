@@ -37,15 +37,15 @@ const parseBMIArguments = (args: Array<string>): PersonDetails => {
     return {
       heightInCm: Number(args[2]),
       weightInKg: Number(args[3])
-    }
+    };
   } else {
     throw new Error('Invalid arguments. Arguments must be numbers');
   }
-}
+};
 
 try {
   const personDetails = parseBMIArguments(process.argv);
   console.log(calculateBmi(personDetails.heightInCm, personDetails.weightInKg));  
 } catch (e) {
-  console.log('Something happened.', e.message);
+  console.log('Something happened.', (<Error>e).message);
 }

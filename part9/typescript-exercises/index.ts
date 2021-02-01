@@ -11,7 +11,7 @@ app.get('/bmi', (req, res) => {
   if (req.query.height === undefined || req.query.weight === undefined) {
     res.status(400).send({
       message: 'Required query parameters height and weight are missing.'
-    })
+    });
   }
   const height = Number(req.query.height);
   const weight = Number(req.query.weight);

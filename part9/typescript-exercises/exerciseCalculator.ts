@@ -16,7 +16,7 @@ interface ExerciseArguments {
 const calculateExercises = (targetDailyAmount: number, dailyExerciseAmounts: Array<number>): ExerciseInformation => {
   const averageDailyAmount = dailyExerciseAmounts.reduce((prev, current) => prev + current) / dailyExerciseAmounts.length;
 
-  const averageToTargetRatio = averageDailyAmount / targetDailyAmount
+  const averageToTargetRatio = averageDailyAmount / targetDailyAmount;
   let rating = 2;
   let ratingDescription = 'Good job! Target met.';
   if (averageToTargetRatio > 1.25) {
@@ -35,7 +35,7 @@ const calculateExercises = (targetDailyAmount: number, dailyExerciseAmounts: Arr
     rating: rating,
     ratingDescription: ratingDescription,
     success: targetDailyAmount >= averageDailyAmount
-  }
+  };
 };
 
 const parseExerciseArguments = (args: Array<string>): ExerciseArguments => {
@@ -51,7 +51,7 @@ const parseExerciseArguments = (args: Array<string>): ExerciseArguments => {
   const exercises = args[3].replace('[', '').replace(']', '').replace(' ', '').split(',').map(x => Number(x));
 
   for (let i = 0; i < exercises.length; i++) {
-    if (exercises[i] === NaN) {
+    if (isNaN(exercises[i])) {
       throw new Error('Invalid arguments. Daily exercise argument must contain array of numbers');
     }
   }
@@ -59,8 +59,8 @@ const parseExerciseArguments = (args: Array<string>): ExerciseArguments => {
   return {
     target: targetAmount,
     dailyExerciseAmounts: exercises
-  }
-}
+  };
+};
 
 const exerciseArguments = parseExerciseArguments(process.argv);
 console.log(calculateExercises(exerciseArguments.target, exerciseArguments.dailyExerciseAmounts));
